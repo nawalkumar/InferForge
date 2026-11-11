@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "01-gpu-system-inspector"
+version = "0.1.0"
+description = "GPU System Inspector (InferForge Project 01): cross-layer GPU environment inspection and readiness diagnostics."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+# PyTorch is deliberately not declared: it is an optional, runtime-detected dependency.
+dependencies = ["nvidia-ml-py>=12.535.108"]
+classifiers = [
+    "Programming Language :: Python :: 3 :: Only",
+    "Private :: Do Not Upload",
+]
+
+[project.scripts]
+inferforge-gpu = "gpu_system_inspector.cli.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gpu_system_inspector"]
+
+[dependency-groups]
+test = ["pytest>=8", "jsonschema>=4", "pytest-cov>=5"]
+
+[tool.uv]
+default-groups = ["test"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["tests"]
+addopts = "--import-mode=importlib -m 'not hardware'"
+markers = [
+    "hardware: requires real NVIDIA hardware (run with: uv run pytest -m hardware)",
+    "host: reads the real host OS, read-only, no NVIDIA hardware (run alone: uv run pytest -m host)",
+]
+
+# Coverage is opt-in: uv run pytest --cov --cov-report=term-missing
+[tool.coverage.run]
+source = ["gpu_system_inspector"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+fail_under = 92

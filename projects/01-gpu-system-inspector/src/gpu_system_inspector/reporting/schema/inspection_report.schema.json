@@ -1,0 +1,3838 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:inferforge:gpu-system-inspector:report:1.0",
+  "title": "GPU System Inspector report",
+  "description": "inferforge.gpu_system_inspector.report version 1.0. Generated from the gpu_system_inspector.models dataclasses.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_name",
+    "schema_version",
+    "application",
+    "generated_at",
+    "duration_ms",
+    "data_origin",
+    "mode",
+    "options",
+    "system",
+    "gpu",
+    "driver",
+    "cuda_environment",
+    "frameworks",
+    "runtime",
+    "diagnostics",
+    "readiness",
+    "collection_errors",
+    "unsupported_capabilities",
+    "limitations",
+    "collector_runs",
+    "redaction"
+  ],
+  "properties": {
+    "schema_name": {
+      "type": "string",
+      "const": "inferforge.gpu_system_inspector.report"
+    },
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "application": {
+      "$ref": "#/$defs/ApplicationInfo"
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?Z$"
+    },
+    "duration_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "data_origin": {
+      "$ref": "#/$defs/DataOrigin"
+    },
+    "mode": {
+      "$ref": "#/$defs/InspectionMode"
+    },
+    "options": {
+      "$ref": "#/$defs/InspectionOptions"
+    },
+    "system": {
+      "$ref": "#/$defs/SystemInfo"
+    },
+    "gpu": {
+      "$ref": "#/$defs/GPUInventory"
+    },
+    "driver": {
+      "$ref": "#/$defs/DriverInfo"
+    },
+    "cuda_environment": {
+      "$ref": "#/$defs/CUDAEnvironmentInfo"
+    },
+    "frameworks": {
+      "$ref": "#/$defs/FrameworkInfo"
+    },
+    "runtime": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/RuntimeMetrics"
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/DiagnosticFinding"
+      }
+    },
+    "readiness": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ReadinessResult"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "collection_errors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CollectionError"
+      }
+    },
+    "unsupported_capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/UnsupportedCapability"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "collector_runs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/CollectorRun"
+      }
+    },
+    "redaction": {
+      "$ref": "#/$defs/RedactionInfo"
+    }
+  },
+  "if": {
+    "properties": {
+      "mode": {
+        "const": "READINESS"
+      }
+    }
+  },
+  "then": {
+    "properties": {
+      "readiness": {
+        "type": "object"
+      },
+      "options": {
+        "properties": {
+          "required_vram_gib": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  },
+  "else": {
+    "properties": {
+      "readiness": {
+        "type": "null"
+      },
+      "options": {
+        "properties": {
+          "required_vram_gib": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "AllocatorStats": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "torch_index",
+        "allocated_bytes",
+        "reserved_bytes",
+        "peak_allocated_bytes",
+        "peak_reserved_bytes"
+      ],
+      "properties": {
+        "torch_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "allocated_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "reserved_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "peak_allocated_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "peak_reserved_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ApplicationInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "display_name",
+        "distribution",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "distribution": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "CUDAEnvironmentInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "toolkits",
+        "active_nvcc_path",
+        "active_nvcc_version",
+        "environment"
+      ],
+      "properties": {
+        "toolkits": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedCudaToolkitCandidateList"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "active_nvcc_path": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "active_nvcc_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "environment": {
+          "type": "object",
+          "additionalProperties": {
+            "allOf": [
+              {
+                "$ref": "#/$defs/ObservedString"
+              },
+              {
+                "properties": {
+                  "unit": {
+                    "const": null
+                  }
+                }
+              }
+            ]
+          },
+          "propertyNames": {
+            "pattern": "^(CUDA_DEVICE_ORDER|CUDA_HOME|CUDA_PATH|CUDA_VISIBLE_DEVICES|LD_LIBRARY_PATH|NVIDIA_DRIVER_CAPABILITIES|NVIDIA_VISIBLE_DEVICES|PYTORCH_ALLOC_CONF|PYTORCH_CUDA_ALLOC_CONF|PYTORCH_NO_CUDA_MEMORY_CACHING|PYTORCH_NVML_BASED_CUDA_CHECK)$|^CUDA_PATH_V[0-9A-Z_]+$"
+          }
+        }
+      }
+    },
+    "CollectionError": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collector",
+        "device_ref",
+        "status",
+        "error_code",
+        "message",
+        "report_path"
+      ],
+      "properties": {
+        "collector": {
+          "type": "string",
+          "minLength": 1
+        },
+        "device_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(nvml|smi):(0|[1-9][0-9]*)$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "error_code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string"
+        },
+        "report_path": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(/([^~/]|~[01])*)*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "CollectionStatus": {
+      "type": "string",
+      "enum": [
+        "COLLECTED",
+        "NOT_INSTALLED",
+        "NOT_DETECTED",
+        "NOT_SUPPORTED",
+        "PERMISSION_DENIED",
+        "COLLECTION_FAILED",
+        "SKIPPED",
+        "NOT_APPLICABLE",
+        "UNKNOWN"
+      ]
+    },
+    "CollectorRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "collector",
+        "status",
+        "duration_ms"
+      ],
+      "properties": {
+        "collector": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "$ref": "#/$defs/CollectorRunStatus"
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "CollectorRunStatus": {
+      "type": "string",
+      "enum": [
+        "COMPLETED",
+        "PARTIAL",
+        "FAILED",
+        "SKIPPED"
+      ]
+    },
+    "Confidence": {
+      "type": "string",
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "CudaToolkitCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "root_path",
+        "discovered_via",
+        "version",
+        "nvcc_path"
+      ],
+      "properties": {
+        "root_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "discovered_via": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ToolkitDiscovery"
+          }
+        },
+        "version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "nvcc_path": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "DataOrigin": {
+      "type": "string",
+      "enum": [
+        "LIVE",
+        "FIXTURE"
+      ]
+    },
+    "DeviceReadiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_ref",
+        "status",
+        "reason",
+        "free_bytes",
+        "total_bytes",
+        "margin_bytes",
+        "explanation"
+      ],
+      "properties": {
+        "device_ref": {
+          "type": "string",
+          "pattern": "^(nvml|smi):(0|[1-9][0-9]*)$"
+        },
+        "status": {
+          "$ref": "#/$defs/ReadinessStatus"
+        },
+        "reason": {
+          "$ref": "#/$defs/ReadinessReason"
+        },
+        "free_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "total_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "margin_bytes": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "DiagnosticFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "device_ref",
+        "status",
+        "severity",
+        "title",
+        "explanation",
+        "evidence",
+        "detection_sources",
+        "recommendations",
+        "confidence",
+        "limitations"
+      ],
+      "properties": {
+        "check_id": {
+          "type": "string",
+          "pattern": "^D[0-9]{2}$"
+        },
+        "device_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(nvml|smi):(0|[1-9][0-9]*)$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/DiagnosticStatus"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          }
+        },
+        "detection_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Source"
+          }
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/Recommendation"
+          }
+        },
+        "confidence": {
+          "$ref": "#/$defs/Confidence"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "PASS"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "severity": {
+                "enum": [
+                  "NONE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "severity": {
+                "enum": [
+                  "NONE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "INFO"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "severity": {
+                "enum": [
+                  "LOW",
+                  "NONE"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "WARNING"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "severity": {
+                "enum": [
+                  "LOW",
+                  "MEDIUM"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "UNKNOWN"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "severity": {
+                "enum": [
+                  "LOW",
+                  "MEDIUM"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "FAIL"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "severity": {
+                "enum": [
+                  "HIGH"
+                ]
+              }
+            }
+          }
+        }
+      ]
+    },
+    "DiagnosticStatus": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "WARNING",
+        "FAIL",
+        "INFO",
+        "NOT_APPLICABLE",
+        "UNKNOWN"
+      ]
+    },
+    "DriverInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "nvml_binding",
+        "nvml_binding_distribution",
+        "nvml_version",
+        "driver_version",
+        "driver_supported_cuda_version",
+        "cuda_driver_library",
+        "nvidia_smi_path",
+        "nvidia_smi_driver_version",
+        "nvidia_smi_cuda_version"
+      ],
+      "properties": {
+        "nvml_binding": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "nvml_binding_distribution": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "nvml_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "driver_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "driver_supported_cuda_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "cuda_driver_library": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "nvidia_smi_path": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "nvidia_smi_driver_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "nvidia_smi_cuda_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "ErrorDetail": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "Evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "statement",
+        "source",
+        "report_path",
+        "value"
+      ],
+      "properties": {
+        "kind": {
+          "$ref": "#/$defs/EvidenceKind"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "report_path": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(/([^~/]|~[01])*)*$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "value": {}
+      }
+    },
+    "EvidenceKind": {
+      "type": "string",
+      "enum": [
+        "OBSERVATION",
+        "INFERENCE"
+      ]
+    },
+    "FrameworkInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pytorch"
+      ],
+      "properties": {
+        "pytorch": {
+          "$ref": "#/$defs/PyTorchInfo"
+        }
+      }
+    },
+    "GPUDeviceInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_ref",
+        "nvml_index",
+        "vendor",
+        "name",
+        "uuid",
+        "pci_bus_id",
+        "pci_device_id",
+        "pci_subsystem_id",
+        "memory_total_bytes",
+        "compute_capability",
+        "mig_mode"
+      ],
+      "properties": {
+        "device_ref": {
+          "type": "string",
+          "pattern": "^(nvml|smi):(0|[1-9][0-9]*)$"
+        },
+        "nvml_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "vendor": {
+          "type": "string",
+          "const": "NVIDIA"
+        },
+        "name": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "uuid": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "pci_bus_id": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "pci_device_id": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "pci_subsystem_id": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "memory_total_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "compute_capability": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "mig_mode": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "GPUInventory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_count",
+        "inventory_source",
+        "devices",
+        "pci_observations"
+      ],
+      "properties": {
+        "device_count": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "inventory_source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/GPUDeviceInfo"
+          }
+        },
+        "pci_observations": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedPciObservationList"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "GpuProcess": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pid",
+        "kind",
+        "used_memory_bytes",
+        "name"
+      ],
+      "properties": {
+        "pid": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "kind": {
+          "$ref": "#/$defs/ProcessKind"
+        },
+        "used_memory_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "name": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "InspectionMode": {
+      "type": "string",
+      "enum": [
+        "GENERAL",
+        "READINESS"
+      ]
+    },
+    "InspectionOptions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_vram_gib",
+        "include_pytorch",
+        "include_processes",
+        "redact",
+        "subprocess_timeout_s",
+        "pytorch_timeout_s",
+        "pytorch_probe_mode"
+      ],
+      "properties": {
+        "required_vram_gib": {
+          "anyOf": [
+            {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 1048576
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "include_pytorch": {
+          "type": "boolean"
+        },
+        "include_processes": {
+          "type": "boolean"
+        },
+        "redact": {
+          "type": "boolean"
+        },
+        "subprocess_timeout_s": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 300
+        },
+        "pytorch_timeout_s": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 600
+        },
+        "pytorch_probe_mode": {
+          "$ref": "#/$defs/ProbeMode"
+        }
+      }
+    },
+    "LinuxEnvironment": {
+      "type": "string",
+      "enum": [
+        "NATIVE_LINUX",
+        "WSL1",
+        "WSL2",
+        "UNKNOWN"
+      ]
+    },
+    "ObservedAllocatorStatsList": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "source",
+        "method",
+        "unit",
+        "error",
+        "note"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/AllocatorStats"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "bytes",
+            "celsius",
+            "watts",
+            "percent",
+            "ms",
+            null
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorDetail"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COLLECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "COLLECTION_FAILED",
+                  "NOT_DETECTED",
+                  "NOT_INSTALLED",
+                  "NOT_SUPPORTED",
+                  "PERMISSION_DENIED",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "SKIPPED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ObservedBoolean": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "source",
+        "method",
+        "unit",
+        "error",
+        "note"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "bytes",
+            "celsius",
+            "watts",
+            "percent",
+            "ms",
+            null
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorDetail"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COLLECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "COLLECTION_FAILED",
+                  "NOT_DETECTED",
+                  "NOT_INSTALLED",
+                  "NOT_SUPPORTED",
+                  "PERMISSION_DENIED",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "SKIPPED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ObservedCudaToolkitCandidateList": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "source",
+        "method",
+        "unit",
+        "error",
+        "note"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/CudaToolkitCandidate"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "bytes",
+            "celsius",
+            "watts",
+            "percent",
+            "ms",
+            null
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorDetail"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COLLECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "COLLECTION_FAILED",
+                  "NOT_DETECTED",
+                  "NOT_INSTALLED",
+                  "NOT_SUPPORTED",
+                  "PERMISSION_DENIED",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "SKIPPED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ObservedGpuProcessList": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "source",
+        "method",
+        "unit",
+        "error",
+        "note"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/GpuProcess"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "bytes",
+            "celsius",
+            "watts",
+            "percent",
+            "ms",
+            null
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorDetail"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COLLECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "COLLECTION_FAILED",
+                  "NOT_DETECTED",
+                  "NOT_INSTALLED",
+                  "NOT_SUPPORTED",
+                  "PERMISSION_DENIED",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "SKIPPED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ObservedInteger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "source",
+        "method",
+        "unit",
+        "error",
+        "note"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "bytes",
+            "celsius",
+            "watts",
+            "percent",
+            "ms",
+            null
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorDetail"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COLLECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "COLLECTION_FAILED",
+                  "NOT_DETECTED",
+                  "NOT_INSTALLED",
+                  "NOT_SUPPORTED",
+                  "PERMISSION_DENIED",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "SKIPPED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ObservedLinuxEnvironment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "source",
+        "method",
+        "unit",
+        "error",
+        "note"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/LinuxEnvironment"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "bytes",
+            "celsius",
+            "watts",
+            "percent",
+            "ms",
+            null
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorDetail"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COLLECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "COLLECTION_FAILED",
+                  "NOT_DETECTED",
+                  "NOT_INSTALLED",
+                  "NOT_SUPPORTED",
+                  "PERMISSION_DENIED",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "SKIPPED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ObservedNumber": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "source",
+        "method",
+        "unit",
+        "error",
+        "note"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "bytes",
+            "celsius",
+            "watts",
+            "percent",
+            "ms",
+            null
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorDetail"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COLLECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "COLLECTION_FAILED",
+                  "NOT_DETECTED",
+                  "NOT_INSTALLED",
+                  "NOT_SUPPORTED",
+                  "PERMISSION_DENIED",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "SKIPPED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ObservedPciObservationList": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "source",
+        "method",
+        "unit",
+        "error",
+        "note"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/PciObservation"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "bytes",
+            "celsius",
+            "watts",
+            "percent",
+            "ms",
+            null
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorDetail"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COLLECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "COLLECTION_FAILED",
+                  "NOT_DETECTED",
+                  "NOT_INSTALLED",
+                  "NOT_SUPPORTED",
+                  "PERMISSION_DENIED",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "SKIPPED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ObservedString": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "status",
+        "source",
+        "method",
+        "unit",
+        "error",
+        "note"
+      ],
+      "properties": {
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/Source"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "method": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "enum": [
+            "bytes",
+            "celsius",
+            "watts",
+            "percent",
+            "ms",
+            null
+          ]
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ErrorDetail"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "note": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "COLLECTED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "value": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "source": {
+                "not": {
+                  "type": "null"
+                }
+              },
+              "method": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "value": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "COLLECTION_FAILED",
+                  "NOT_DETECTED",
+                  "NOT_INSTALLED",
+                  "NOT_SUPPORTED",
+                  "PERMISSION_DENIED",
+                  "UNKNOWN"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "SKIPPED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "NOT_APPLICABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "note": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "PciObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "address",
+        "vendor_id",
+        "device_id",
+        "class_code",
+        "is_nvidia",
+        "kernel_driver"
+      ],
+      "properties": {
+        "address": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vendor_id": {
+          "type": "string",
+          "pattern": "^0x[0-9a-f]{4}$"
+        },
+        "device_id": {
+          "type": "string",
+          "pattern": "^0x[0-9a-f]{4}$"
+        },
+        "class_code": {
+          "type": "string",
+          "pattern": "^0x[0-9a-f]{6}$"
+        },
+        "is_nvidia": {
+          "type": "boolean"
+        },
+        "kernel_driver": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "PlatformProfile": {
+      "type": "string",
+      "enum": [
+        "LINUX",
+        "WSL2",
+        "WINDOWS",
+        "MACOS",
+        "OTHER"
+      ]
+    },
+    "ProbeInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "protocol_version",
+        "duration_ms"
+      ],
+      "properties": {
+        "mode": {
+          "$ref": "#/$defs/ProbeMode"
+        },
+        "protocol_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "duration_ms": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "ProbeMode": {
+      "type": "string",
+      "enum": [
+        "SUBPROCESS",
+        "IN_PROCESS"
+      ]
+    },
+    "ProcessKind": {
+      "type": "string",
+      "enum": [
+        "COMPUTE",
+        "GRAPHICS",
+        "COMPUTE_AND_GRAPHICS"
+      ]
+    },
+    "PyTorchInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "distribution_version",
+        "version",
+        "cuda_build",
+        "build_cuda_version",
+        "rocm_build",
+        "cudnn_version",
+        "cuda_available",
+        "cuda_init_warnings",
+        "device_count",
+        "devices",
+        "allocator",
+        "probe"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "distribution_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "cuda_build": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedBoolean"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "build_cuda_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "rocm_build": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedBoolean"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "cudnn_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "cuda_available": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedBoolean"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "cuda_init_warnings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "device_count": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TorchDeviceInfo"
+          }
+        },
+        "allocator": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedAllocatorStatsList"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "probe": {
+          "$ref": "#/$defs/ProbeInfo"
+        }
+      }
+    },
+    "ReadinessReason": {
+      "type": "string",
+      "enum": [
+        "SUFFICIENT_FREE_MEMORY",
+        "INSUFFICIENT_FREE_MEMORY",
+        "INSUFFICIENT_TOTAL_MEMORY",
+        "FREE_MEMORY_UNAVAILABLE",
+        "MIG_ENABLED_UNSUPPORTED",
+        "AT_LEAST_ONE_DEVICE_READY",
+        "NO_DEVICE_READY",
+        "SOME_DEVICES_UNKNOWN",
+        "NO_NVIDIA_DEVICE",
+        "PLATFORM_NOT_SUPPORTED",
+        "DEVICE_PRESENCE_UNKNOWN"
+      ]
+    },
+    "ReadinessResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_vram_gib",
+        "required_bytes",
+        "criterion",
+        "overall_status",
+        "overall_reason",
+        "devices",
+        "disclaimer",
+        "limitations"
+      ],
+      "properties": {
+        "required_vram_gib": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "maximum": 1048576
+        },
+        "required_bytes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "criterion": {
+          "type": "string",
+          "const": "DEVICE_FREE_MEMORY_GTE_REQUIRED"
+        },
+        "overall_status": {
+          "$ref": "#/$defs/ReadinessStatus"
+        },
+        "overall_reason": {
+          "$ref": "#/$defs/ReadinessReason"
+        },
+        "devices": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/DeviceReadiness"
+          }
+        },
+        "disclaimer": {
+          "type": "string",
+          "const": "Free memory at least equal to the requested amount was observed at the time of inspection. This does not guarantee that a model will fit or run: actual usage depends on weights, activations, KV cache, framework/allocator overhead, CUDA context size, fragmentation and other processes that may allocate memory after this snapshot."
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ReadinessStatus": {
+      "type": "string",
+      "enum": [
+        "READY",
+        "NOT_READY",
+        "UNKNOWN"
+      ]
+    },
+    "Recommendation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "action",
+        "rationale",
+        "reference_url"
+      ],
+      "properties": {
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference_url": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "RedactionCategory": {
+      "type": "string",
+      "enum": [
+        "PATH",
+        "PROCESS_NAME",
+        "DEVICE_ID",
+        "USER"
+      ]
+    },
+    "RedactionInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applied",
+        "categories"
+      ],
+      "properties": {
+        "applied": {
+          "type": "boolean"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/RedactionCategory"
+          }
+        }
+      }
+    },
+    "RuntimeMetrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "device_ref",
+        "sampled_at",
+        "gpu_utilization_percent",
+        "memory_bus_utilization_percent",
+        "memory_total_bytes",
+        "memory_used_bytes",
+        "memory_free_bytes",
+        "memory_reserved_bytes",
+        "temperature_gpu_celsius",
+        "temperature_slowdown_threshold_celsius",
+        "power_draw_watts",
+        "power_limit_watts",
+        "processes"
+      ],
+      "properties": {
+        "device_ref": {
+          "type": "string",
+          "pattern": "^(nvml|smi):(0|[1-9][0-9]*)$"
+        },
+        "sampled_at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,6})?Z$"
+        },
+        "gpu_utilization_percent": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "percent"
+                }
+              }
+            }
+          ]
+        },
+        "memory_bus_utilization_percent": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "percent"
+                }
+              }
+            }
+          ]
+        },
+        "memory_total_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "memory_used_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "memory_free_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "memory_reserved_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "temperature_gpu_celsius": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "celsius"
+                }
+              }
+            }
+          ]
+        },
+        "temperature_slowdown_threshold_celsius": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "celsius"
+                }
+              }
+            }
+          ]
+        },
+        "power_draw_watts": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedNumber"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "watts"
+                }
+              }
+            }
+          ]
+        },
+        "power_limit_watts": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedNumber"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "watts"
+                }
+              }
+            }
+          ]
+        },
+        "processes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedGpuProcessList"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "Severity": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ]
+    },
+    "Source": {
+      "type": "string",
+      "enum": [
+        "PLATFORM",
+        "OS",
+        "ENVIRONMENT",
+        "NVML",
+        "NVIDIA_SMI",
+        "CUDA_TOOLKIT",
+        "PYTORCH",
+        "INSPECTOR"
+      ]
+    },
+    "SystemInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "platform_profile",
+        "os_name",
+        "os_release",
+        "os_version",
+        "os_distribution",
+        "architecture",
+        "processor_model",
+        "logical_cpu_count",
+        "memory_total_bytes",
+        "memory_available_bytes",
+        "python_version",
+        "python_implementation",
+        "python_executable",
+        "linux_environment"
+      ],
+      "properties": {
+        "platform_profile": {
+          "$ref": "#/$defs/PlatformProfile"
+        },
+        "os_name": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "os_release": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "os_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "os_distribution": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "architecture": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "processor_model": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "logical_cpu_count": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "memory_total_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "memory_available_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "python_version": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "python_implementation": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "python_executable": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "linux_environment": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedLinuxEnvironment"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "linux_environment": {
+                "properties": {
+                  "value": {
+                    "const": "WSL2"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "platform_profile": {
+                "const": "WSL2"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "linux_environment": {
+                "properties": {
+                  "value": {
+                    "enum": [
+                      "NATIVE_LINUX",
+                      "WSL1",
+                      "UNKNOWN"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "platform_profile": {
+                "const": "LINUX"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "platform_profile": {
+                "enum": [
+                  "WINDOWS",
+                  "MACOS",
+                  "OTHER"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "linux_environment": {
+                "properties": {
+                  "value": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "ToolkitDiscovery": {
+      "type": "string",
+      "enum": [
+        "CUDA_HOME",
+        "CUDA_PATH",
+        "CUDA_PATH_VERSIONED",
+        "NVCC_ON_PATH",
+        "DEFAULT_LOCATION"
+      ]
+    },
+    "TorchDeviceInfo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "torch_index",
+        "name",
+        "compute_capability",
+        "total_memory_bytes",
+        "multiprocessor_count",
+        "uuid",
+        "pci_bus_id",
+        "correlated_device_ref"
+      ],
+      "properties": {
+        "torch_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "name": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "compute_capability": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "total_memory_bytes": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": "bytes"
+                }
+              }
+            }
+          ]
+        },
+        "multiprocessor_count": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedInteger"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "uuid": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "pci_bus_id": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        },
+        "correlated_device_ref": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ObservedString"
+            },
+            {
+              "properties": {
+                "unit": {
+                  "const": null
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "UnsupportedCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability",
+        "status",
+        "device_ref",
+        "reason"
+      ],
+      "properties": {
+        "capability": {
+          "type": "string",
+          "pattern": "^[A-Z0-9_]+(\\.[A-Z0-9_]+)+$"
+        },
+        "status": {
+          "$ref": "#/$defs/CollectionStatus"
+        },
+        "device_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^(nvml|smi):(0|[1-9][0-9]*)$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
