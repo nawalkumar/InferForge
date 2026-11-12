@@ -1,6 +1,6 @@
 """The inspection core (architecture §4.2, §4.11, DEC-44): ordering, guard, aggregation.
 
-`Inspector(adapters).run(options)` runs the implemented collectors in `COLLECTOR_ORDER`
+`Inspector(adapters).run(options)` runs the implemented collectors in a fixed order
 (`system`, `pci`, `nvml`, `driver`, `gpu_hardware`, `runtime`, `nvidia_smi`,
 `cuda_environment`, `pytorch`, `correlation`), each under the guard, owns the single NVML
 session, assembles the `InspectionSnapshot` and hands it to report assembly.
@@ -25,7 +25,9 @@ session, assembles the `InspectionSnapshot` and hands it to report assembly.
 - **Correlation.** `correlation` runs last (DEC-49): it relates the PyTorch devices to the
   NVML inventory from the two sections already collected (DEC-09), probing nothing again;
   its result is the report's PyTorch section.
-- **Not implemented yet.** Diagnostics and readiness (Mode B); a limitation states it.
+- **Readiness and diagnostics.** After collection, Mode B runs the readiness engine
+  (IMP-R01), then the diagnostics engine evaluates D01–D08 over the snapshot (IMP-D00); a
+  rule that raises adds a `diagnostics.Dxx` collection error, never a crash (DEC-50).
 """
 
 from __future__ import annotations
@@ -63,6 +65,7 @@ from gpu_system_inspector.collectors import (
 )
 from gpu_system_inspector.core.environment import resolve_linux_environment
 from gpu_system_inspector.core.guard import run_guarded
+from gpu_system_inspector.diagnostics import DiagnosticInput, DiagnosticsEngine
 from gpu_system_inspector.models import (
     CollectionError,
     CollectionStatus,
@@ -77,6 +80,7 @@ from gpu_system_inspector.models import (
     LinuxEnvironment,
     Observed,
 )
+from gpu_system_inspector.readiness import ReadinessEngine
 from gpu_system_inspector.reporting import assemble_report
 
 PciScannerFactory = Callable[[LinuxEnvironment | None], PciScanner]
@@ -94,17 +98,12 @@ NVML_PROBLEM_STATUSES = frozenset(
         CollectionStatus.UNKNOWN,
     }
 )
-NOT_IMPLEMENTED_LIMITATION = (
-    "This version inspects the system, PCI, GPU hardware, driver, runtime metrics, CUDA "
-    "environment and PyTorch sections and correlates PyTorch devices with NVML devices by "
-    "UUID, then PCI bus ID. Diagnostics and readiness aren't implemented yet: there are no "
-    "findings. CUDA execution isn't checked: frameworks.pytorch.cuda_available is PyTorch's "
-    "own answer, the probe runs no CUDA code, a CUDA Toolkit or nvcc in cuda_environment is "
-    "an installation fact, and driver.cuda_driver_library is the libcuda version NVML "
-    "reports; none of them shows that code runs on a GPU."
-)
-READINESS_NOT_IMPLEMENTED = (
-    "Mode B (required_vram_gib) needs the readiness engine (IMP-R01), which isn't implemented."
+SCOPE_LIMITATION = (
+    "Findings and readiness are derived from this single snapshot only. CUDA execution isn't "
+    "checked: frameworks.pytorch.cuda_available is PyTorch's own answer, the probe runs no "
+    "CUDA code, a CUDA Toolkit or nvcc in cuda_environment is an installation fact, and "
+    "driver.cuda_driver_library is the libcuda version NVML reports; none of them shows that "
+    "code runs on a GPU."
 )
 
 
@@ -124,19 +123,26 @@ class Inspector:
 
     def run(self, options: InspectionOptions | None = None) -> InspectionReport:
         options = options or InspectionOptions()
-        if options.required_vram_gib is not None:
-            raise NotImplementedError(READINESS_NOT_IMPLEMENTED)
         clock = self._adapters.clock
         started = clock.monotonic_ms()
         generated_at = clock.now_utc()
         snapshot = self.collect(options)
+        readiness = (
+            ReadinessEngine().assess(snapshot, options.required_vram_gib)
+            if options.required_vram_gib is not None
+            else None
+        )
+        diagnostics = DiagnosticsEngine().evaluate(DiagnosticInput(snapshot, readiness, options))
         return assemble_report(
             snapshot,
             options=options,
             generated_at=generated_at,
             duration_ms=max(0, clock.monotonic_ms() - started),
             data_origin=self._adapters.provenance,
-            limitations=(NOT_IMPLEMENTED_LIMITATION, *self._limitations),
+            limitations=(SCOPE_LIMITATION, *self._limitations),
+            diagnostics=diagnostics.findings,
+            readiness=readiness,
+            errors=diagnostics.errors,
         )
 
     def collect(self, options: InspectionOptions | None = None) -> InspectionSnapshot:

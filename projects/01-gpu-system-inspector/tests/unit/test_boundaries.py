@@ -26,6 +26,8 @@ ALLOWED_STDLIB = {
     "typing",
 }
 FORBIDDEN_INTERNAL = ("gpu_system_inspector.cli", "gpu_system_inspector.adapters")
+# IMP-P05: the only reporting module that touches the file system.
+REPORTING_IO = {"writer.py": {"os", "tempfile", "contextlib", "pathlib"}}
 
 
 def _imports(path: Path) -> set[str]:
@@ -46,12 +48,13 @@ def _imports(path: Path) -> set[str]:
     ids=lambda p: f"{p.parent.name}/{p.name}",
 )
 def test_data_foundation_imports_only_pure_modules(path):
+    allowed = ALLOWED_STDLIB | {"textwrap"} | REPORTING_IO.get(path.name, set())
     for name in _imports(path):
         root = name.split(".")[0]
         if root == "gpu_system_inspector":
             assert not name.startswith(FORBIDDEN_INTERNAL), f"{path.name} imports {name}"
         else:
-            assert root in ALLOWED_STDLIB, f"{path.name} imports {name}"
+            assert root in allowed, f"{path.name} imports {name}"
 
 
 # Adapter implementations and the OS modules each may use. Everything else in adapters/ is
@@ -114,7 +117,34 @@ def test_collectors_reach_the_host_only_through_adapters(path):
             assert root in ALLOWED_STDLIB, f"{path.name} imports {name}"
 
 
-CORE_INTERNAL = (*INTERNAL, "gpu_system_inspector.collectors", "gpu_system_inspector.reporting")
+CORE_INTERNAL = (
+    *INTERNAL,
+    "gpu_system_inspector.collectors",
+    "gpu_system_inspector.diagnostics",
+    "gpu_system_inspector.readiness",
+    "gpu_system_inspector.reporting",
+)
+EVALUATION_INTERNAL = (
+    "gpu_system_inspector.models",
+    "gpu_system_inspector.diagnostics",
+    "gpu_system_inspector.readiness",
+)
+
+
+@pytest.mark.parametrize(
+    "path",
+    sorted((PACKAGE_ROOT / "diagnostics").glob("*.py"))
+    + sorted((PACKAGE_ROOT / "readiness").glob("*.py")),
+    ids=lambda p: f"{p.parent.name}/{p.name}",
+)
+def test_diagnostics_and_readiness_are_pure_functions_of_the_models(path):
+    """IMP-D00/R01 (DEC-50): rules consume the snapshot only — no adapters, no host access."""
+    for name in _imports(path):
+        root = name.split(".")[0]
+        if root == "gpu_system_inspector":
+            assert name.startswith(EVALUATION_INTERNAL), f"{path.name} imports {name}"
+        else:
+            assert root in ALLOWED_STDLIB, f"{path.name} imports {name}"
 
 
 @pytest.mark.parametrize(
@@ -123,7 +153,8 @@ CORE_INTERNAL = (*INTERNAL, "gpu_system_inspector.collectors", "gpu_system_inspe
     ids=lambda p: f"{p.parent.name}/{p.name}",
 )
 def test_the_core_and_api_use_only_lower_layers(path):
-    """`cli → core → {collectors, reporting} → adapters → models` (architecture §2)."""
+    """`cli → core → {collectors, diagnostics, readiness, reporting} → adapters → models`
+    (architecture §2)."""
     for name in _imports(path):
         root = name.split(".")[0]
         if root == "gpu_system_inspector":

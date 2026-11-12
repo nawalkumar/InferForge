@@ -607,7 +607,7 @@ byte-identical. Against live systems, comparisons must ignore the **volatile fie
 
 | Category | Fields | Placeholder |
 | -------- | ------ | ----------- |
-| `PATH` | `python_executable`, `nvidia_smi_path`, toolkit `root_path`/`nvcc_path`, `active_nvcc_path`, `CUDA_HOME`/`CUDA_PATH*`/`LD_LIBRARY_PATH` values | `<redacted:path>` |
+| `PATH` | `python_executable`, `nvidia_smi_path`, toolkit `root_path`/`nvcc_path`, `active_nvcc_path`, `CUDA_HOME`/`CUDA_PATH*`/`LD_LIBRARY_PATH` values | `<redacted:path:N>` (stable per-report ordinal; distinct paths stay distinct, DEC-50) |
 | `PROCESS_NAME` | `GpuProcess.name` | `<redacted:process>` |
 | `DEVICE_ID` | GPU `uuid`, `pci_bus_id`, PCI `address`, torch `uuid`/`pci_bus_id` | `<redacted:uuid:N>`, `<redacted:pci:N>` (N = stable per-report ordinal, so correlation stays visible) |
 | `USER` | local username and home directory wherever they occur in free text | `<redacted:user>`, `~` |

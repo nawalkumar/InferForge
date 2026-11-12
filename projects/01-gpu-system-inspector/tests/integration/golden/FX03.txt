@@ -1,0 +1,135 @@
+*** FIXTURE DATA — NOT A REAL MEASUREMENT ***
+GPU System Inspector 0.1.0 · InferForge · report schema 1.0
+Generated 2026-01-01T00:00:00Z · mode GENERAL · data origin FIXTURE
+
+SYSTEM
+  Platform                LINUX
+  OS                      Linux (PLATFORM)
+  OS release              6.8.0-synthetic (PLATFORM)
+  OS version              #1 SMP synthetic (PLATFORM)
+  Distribution            Synthetic Linux 24.04 (fixture) (OS)
+  Linux environment       NATIVE_LINUX (INSPECTOR)
+  Architecture            x86_64 (PLATFORM)
+  Processor               Synthetic CPU (fixture) (OS)
+  Logical CPUs            16 (PLATFORM)
+  Memory total            64.0 GiB (OS)
+  Memory available        48.0 GiB (OS)
+  Python                  3.12.12 (PLATFORM) · CPython (PLATFORM)
+  Python executable       /opt/synthetic/venv/bin/python (PLATFORM)
+
+DEVICES
+  NVIDIA devices          —  NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not
+                          Found)
+  PCI scan                1 display device(s), 0 NVIDIA (OS)
+    PCI 0000:00:00.0        0x8086 0x46a6 · driver i915 (OS)
+
+DRIVER & CUDA
+  Driver version          —  NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not
+                          Found)
+  NVML version            —  NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not
+                          Found)
+  NVML binding            13.615.71 (PLATFORM) · distribution nvidia-ml-py
+  Driver CUDA             —  NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not
+                          Found)
+  CUDA driver library     —  NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not
+                          Found)
+  nvidia-smi              —  NOT_DETECTED (FileNotFoundError: nvidia-smi not available)
+  nvidia-smi driver       —  NOT_DETECTED (FileNotFoundError: nvidia-smi not available)
+  nvidia-smi CUDA         —  NOT_DETECTED (FileNotFoundError: nvidia-smi not available)
+
+CUDA TOOLKIT
+  Toolkits                —  NOT_DETECTED (NO_TOOLKIT_FOUND: no CUDA Toolkit candidates)
+  Active nvcc             —  NOT_DETECTED (FileNotFoundError: nvcc not found)
+  Active nvcc path        —  NOT_DETECTED (FileNotFoundError: nvcc not found)
+  CUDA_DEVICE_ORDER       —  NOT_DETECTED (NOT_SET: CUDA_DEVICE_ORDER is not set)
+  CUDA_HOME               —  NOT_DETECTED (NOT_SET: CUDA_HOME is not set)
+  CUDA_PATH               —  NOT_DETECTED (NOT_SET: CUDA_PATH is not set)
+  CUDA_VISIBLE_DEVICES    —  NOT_DETECTED (NOT_SET: CUDA_VISIBLE_DEVICES is not set)
+  LD_LIBRARY_PATH         —  NOT_DETECTED (NOT_SET: LD_LIBRARY_PATH is not set)
+  NVIDIA_DRIVER_CAPABILITIES —  NOT_DETECTED (NOT_SET: NVIDIA_DRIVER_CAPABILITIES is not set)
+  NVIDIA_VISIBLE_DEVICES  —  NOT_DETECTED (NOT_SET: NVIDIA_VISIBLE_DEVICES is not set)
+  PYTORCH_ALLOC_CONF      —  NOT_DETECTED (NOT_SET: PYTORCH_ALLOC_CONF is not set)
+  PYTORCH_CUDA_ALLOC_CONF —  NOT_DETECTED (NOT_SET: PYTORCH_CUDA_ALLOC_CONF is not set)
+  PYTORCH_NO_CUDA_MEMORY_CACHING —  NOT_DETECTED (NOT_SET: PYTORCH_NO_CUDA_MEMORY_CACHING is not
+                                 set)
+  PYTORCH_NVML_BASED_CUDA_CHECK —  NOT_DETECTED (NOT_SET: PYTORCH_NVML_BASED_CUDA_CHECK is not set)
+
+PYTORCH  (in this Python environment)
+  Status                  COLLECTED
+  Version                 2.4.1+cpu (PYTORCH)
+  Distribution version    2.4.1 (PYTORCH)
+  CUDA build              no (PYTORCH)
+  Build CUDA              —  NOT_APPLICABLE (CPU-only PyTorch build)
+  ROCm build              no (PYTORCH)
+  cuDNN                   —  NOT_APPLICABLE (CPU-only PyTorch build)
+  CUDA available          no (PYTORCH)
+  Device count            0 (PYTORCH)
+  Probe                   SUBPROCESS · protocol 2
+
+RUNTIME SNAPSHOT
+  Devices                 none inventoried
+
+FINDINGS
+  [INFO] D01 PyTorch can't use CUDA
+      PyTorch reports CUDA unavailable, which is expected: no NVIDIA GPU was found.
+      observed: torch.cuda.is_available() is False (PYTORCH)
+      confidence: HIGH · severity: NONE
+      limitation: Causes are inferred from the collected snapshot; other causes (for example
+                  corrupted installations or unusual library paths) are possible.
+  [INFO] D04 NVIDIA GPU availability
+      No NVIDIA GPU found: the PCI scan found no NVIDIA device and no NVIDIA driver interface was
+      detected. The rest of the report is still valid.
+      observed: NVML is NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not Found)
+                (NVML)
+      observed: GPU device count is NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library
+                Not Found) (NVML)
+      observed: nvidia-smi is NOT_DETECTED (FileNotFoundError: nvidia-smi not available)
+                (NVIDIA_SMI)
+      observed: PCI scan is COLLECTED (0 NVIDIA device(s)) (OS)
+      confidence: HIGH · severity: NONE
+  [PASS] D05 Dependency availability
+      All dependencies the inspector uses are present.
+      observed: nvidia-ml-py (pynvml) is '13.615.71' (PLATFORM)
+      observed: PyTorch section is COLLECTED (2.4.1+cpu) (PYTORCH)
+      observed: nvidia-smi is NOT_DETECTED (FileNotFoundError: nvidia-smi not available)
+                (NVIDIA_SMI)
+      confidence: HIGH · severity: NONE
+  [NOT_APPLICABLE] D02 Free GPU memory vs requirement
+      Not evaluated: no --required-vram supplied (general inspection).
+      inferred: No --required-vram supplied.
+      confidence: NOT_APPLICABLE · severity: NONE
+  [NOT_APPLICABLE] D03 CUDA version landscape
+      No CUDA version was collected from the driver, a toolkit or PyTorch.
+      observed: Driver-supported CUDA version is NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML
+                Shared Library Not Found) (NVML)
+      confidence: NOT_APPLICABLE · severity: NONE
+  [NOT_APPLICABLE] D06 Runtime metrics availability
+      No inventoried devices.
+      observed: GPU device count is NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library
+                Not Found) (NVML)
+      confidence: NOT_APPLICABLE · severity: NONE
+  [NOT_APPLICABLE] D07 Temperature observation
+      No inventoried devices.
+      observed: GPU device count is NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library
+                Not Found) (NVML)
+      confidence: NOT_APPLICABLE · severity: NONE
+  [NOT_APPLICABLE] D08 CUDA device visibility and ordering
+      No inventoried devices and CUDA_VISIBLE_DEVICES is unset.
+      observed: CUDA_VISIBLE_DEVICES is NOT_DETECTED (NOT_SET: CUDA_VISIBLE_DEVICES is not set)
+                (ENVIRONMENT)
+      confidence: NOT_APPLICABLE · severity: NONE
+
+UNSUPPORTED
+  none
+
+COLLECTION ERRORS
+  none
+
+LIMITATIONS
+  - This report is a point-in-time snapshot.
+  - Findings and readiness are derived from this single snapshot only. CUDA execution isn't checked:
+    frameworks.pytorch.cuda_available is PyTorch's own answer, the probe runs no CUDA code, a CUDA
+    Toolkit or nvcc in cuda_environment is an installation fact, and driver.cuda_driver_library is
+    the libcuda version NVML reports; none of them shows that code runs on a GPU.
+
+*** FIXTURE DATA — NOT A REAL MEASUREMENT ***

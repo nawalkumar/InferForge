@@ -1,0 +1,148 @@
+*** FIXTURE DATA — NOT A REAL MEASUREMENT ***
+GPU System Inspector 0.1.0 · InferForge · report schema 1.0
+Generated 2026-01-01T00:00:00Z · mode GENERAL · data origin FIXTURE
+
+SYSTEM
+  Platform                MACOS
+  OS                      Darwin (PLATFORM)
+  OS release              24.0.0 (PLATFORM)
+  OS version              Darwin Kernel Version 24.0.0 (synthetic) (PLATFORM)
+  Distribution            macOS 15.0 (PLATFORM)
+  Linux environment       —  NOT_APPLICABLE (Not a Linux platform, so there is no Linux environment
+                          to classify.)
+  Architecture            arm64 (PLATFORM)
+  Processor               Synthetic Apple Silicon (fixture) (OS)
+  Logical CPUs            16 (PLATFORM)
+  Memory total            64.0 GiB (OS)
+  Memory available        —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: Available memory isn't collected
+                          on macOS in V1: there is no sysctl equivalent of MemAvailable, and the
+                          Mach VM statistics needed to estimate it are out of scope.)
+  Python                  3.12.12 (PLATFORM) · CPython (PLATFORM)
+  Python executable       /opt/synthetic/venv/bin/python (PLATFORM)
+
+DEVICES
+  NVIDIA devices          —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: NVIDIA CUDA GPUs are not
+                          supported on macOS)
+  PCI scan                —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: PCI presence check is Linux-only
+                          in V1 (FR-04; DEC-22; product_specification.md §4).)
+
+DRIVER & CUDA
+  Driver version          —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: NVIDIA CUDA GPUs are not
+                          supported on macOS)
+  NVML version            —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: NVIDIA CUDA GPUs are not
+                          supported on macOS)
+  NVML binding            13.615.71 (PLATFORM) · distribution nvidia-ml-py
+  Driver CUDA             —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: NVIDIA CUDA GPUs are not
+                          supported on macOS)
+  CUDA driver library     —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: NVIDIA CUDA GPUs are not
+                          supported on macOS)
+  nvidia-smi              —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: nvidia-smi not available)
+  nvidia-smi driver       —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: nvidia-smi not available)
+  nvidia-smi CUDA         —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: nvidia-smi not available)
+
+CUDA TOOLKIT
+  Toolkits                —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: CUDA Toolkit is not available on
+                          this platform)
+  Active nvcc             —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: CUDA Toolkit is not available on
+                          this platform)
+  Active nvcc path        —  NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: CUDA Toolkit is not available on
+                          this platform)
+  CUDA_DEVICE_ORDER       —  NOT_DETECTED (NOT_SET: CUDA_DEVICE_ORDER is not set)
+  CUDA_HOME               /usr/local/cuda-12.4 (ENVIRONMENT)
+  CUDA_PATH               —  NOT_DETECTED (NOT_SET: CUDA_PATH is not set)
+  CUDA_VISIBLE_DEVICES    —  NOT_DETECTED (NOT_SET: CUDA_VISIBLE_DEVICES is not set)
+  LD_LIBRARY_PATH         —  NOT_DETECTED (NOT_SET: LD_LIBRARY_PATH is not set)
+  NVIDIA_DRIVER_CAPABILITIES —  NOT_DETECTED (NOT_SET: NVIDIA_DRIVER_CAPABILITIES is not set)
+  NVIDIA_VISIBLE_DEVICES  —  NOT_DETECTED (NOT_SET: NVIDIA_VISIBLE_DEVICES is not set)
+  PYTORCH_ALLOC_CONF      —  NOT_DETECTED (NOT_SET: PYTORCH_ALLOC_CONF is not set)
+  PYTORCH_CUDA_ALLOC_CONF —  NOT_DETECTED (NOT_SET: PYTORCH_CUDA_ALLOC_CONF is not set)
+  PYTORCH_NO_CUDA_MEMORY_CACHING —  NOT_DETECTED (NOT_SET: PYTORCH_NO_CUDA_MEMORY_CACHING is not
+                                 set)
+  PYTORCH_NVML_BASED_CUDA_CHECK —  NOT_DETECTED (NOT_SET: PYTORCH_NVML_BASED_CUDA_CHECK is not set)
+
+PYTORCH  (in this Python environment)
+  Status                  COLLECTED
+  Version                 2.4.1 (PYTORCH)
+  Distribution version    2.4.1 (PYTORCH)
+  CUDA build              no (PYTORCH)
+  Build CUDA              —  NOT_APPLICABLE (CPU-only PyTorch build)
+  ROCm build              no (PYTORCH)
+  cuDNN                   —  NOT_APPLICABLE (CPU-only PyTorch build)
+  CUDA available          no (PYTORCH)
+  Device count            0 (PYTORCH)
+  Probe                   SUBPROCESS · protocol 2
+
+RUNTIME SNAPSHOT
+  Devices                 none inventoried
+
+FINDINGS
+  [INFO] D01 PyTorch can't use CUDA
+      PyTorch reports CUDA unavailable, which is expected: no NVIDIA GPU was found.
+      observed: torch.cuda.is_available() is False (PYTORCH)
+      confidence: HIGH · severity: NONE
+      limitation: Causes are inferred from the collected snapshot; other causes (for example
+                  corrupted installations or unusual library paths) are possible.
+  [INFO] D04 NVIDIA GPU availability
+      NVIDIA CUDA GPUs are not supported on macOS; general information was collected. The rest of
+      the report is still valid.
+      observed: NVML is NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: NVIDIA CUDA GPUs are not supported on
+                macOS) (NVML)
+      observed: GPU device count is NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: NVIDIA CUDA GPUs are not
+                supported on macOS) (NVML)
+      observed: nvidia-smi is NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: nvidia-smi not available)
+                (NVIDIA_SMI)
+      observed: PCI scan is NOT_SUPPORTED (OS)
+      confidence: HIGH · severity: NONE
+  [PASS] D05 Dependency availability
+      All dependencies the inspector uses are present.
+      observed: nvidia-ml-py (pynvml) is '13.615.71' (PLATFORM)
+      observed: PyTorch section is COLLECTED (2.4.1) (PYTORCH)
+      observed: nvidia-smi is NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: nvidia-smi not available)
+                (NVIDIA_SMI)
+      confidence: HIGH · severity: NONE
+  [NOT_APPLICABLE] D02 Free GPU memory vs requirement
+      Not evaluated: no --required-vram supplied (general inspection).
+      inferred: No --required-vram supplied.
+      confidence: NOT_APPLICABLE · severity: NONE
+  [NOT_APPLICABLE] D03 CUDA version landscape
+      No CUDA version was collected from the driver, a toolkit or PyTorch.
+      observed: Driver-supported CUDA version is NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: NVIDIA CUDA
+                GPUs are not supported on macOS) (NVML)
+      confidence: NOT_APPLICABLE · severity: NONE
+  [NOT_APPLICABLE] D06 Runtime metrics availability
+      No inventoried devices.
+      observed: GPU device count is NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: NVIDIA CUDA GPUs are not
+                supported on macOS) (NVML)
+      confidence: NOT_APPLICABLE · severity: NONE
+  [NOT_APPLICABLE] D07 Temperature observation
+      No inventoried devices.
+      observed: GPU device count is NOT_SUPPORTED (PLATFORM_NOT_SUPPORTED: NVIDIA CUDA GPUs are not
+                supported on macOS) (NVML)
+      confidence: NOT_APPLICABLE · severity: NONE
+  [NOT_APPLICABLE] D08 CUDA device visibility and ordering
+      No inventoried devices and CUDA_VISIBLE_DEVICES is unset.
+      observed: CUDA_VISIBLE_DEVICES is NOT_DETECTED (NOT_SET: CUDA_VISIBLE_DEVICES is not set)
+                (ENVIRONMENT)
+      confidence: NOT_APPLICABLE · severity: NONE
+
+UNSUPPORTED
+  CUDA.TOOLKIT: NOT_SUPPORTED — The CUDA Toolkit is not available on macOS.
+  GPU.PCI_SCAN: NOT_SUPPORTED — PCI presence check is Linux-only in V1 (FR-04; DEC-22;
+      product_specification.md §4).
+  NVIDIA.ALL: NOT_SUPPORTED — NVIDIA CUDA GPUs are not supported on macOS (product_specification.md
+      §4).
+  SYSTEM.MEMORY_AVAILABLE: NOT_SUPPORTED — Available memory isn't collected on macOS in V1: there is
+      no sysctl equivalent of MemAvailable, and the Mach VM statistics needed to estimate it are out
+      of scope.
+
+COLLECTION ERRORS
+  none
+
+LIMITATIONS
+  - This report is a point-in-time snapshot.
+  - Findings and readiness are derived from this single snapshot only. CUDA execution isn't checked:
+    frameworks.pytorch.cuda_available is PyTorch's own answer, the probe runs no CUDA code, a CUDA
+    Toolkit or nvcc in cuda_environment is an installation fact, and driver.cuda_driver_library is
+    the libcuda version NVML reports; none of them shows that code runs on a GPU.
+
+*** FIXTURE DATA — NOT A REAL MEASUREMENT ***

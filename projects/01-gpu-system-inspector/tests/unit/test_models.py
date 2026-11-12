@@ -512,6 +512,7 @@ def test_options_validation_matches_cli_ranges():
     assert InspectionOptions().subprocess_timeout_s == 10.0
     for bad in (
         dict(required_vram_gib=0.0),
+        dict(required_vram_gib=1e-12),
         dict(required_vram_gib=1048577.0),
         dict(subprocess_timeout_s=0.0),
         dict(pytorch_timeout_s=601.0),

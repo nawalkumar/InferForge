@@ -1,0 +1,877 @@
+{
+  "schema_name": "inferforge.gpu_system_inspector.report",
+  "schema_version": "1.0",
+  "application": {
+    "name": "gpu-system-inspector",
+    "display_name": "GPU System Inspector",
+    "distribution": "01-gpu-system-inspector",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-11-11T14:10:19.410486Z",
+  "duration_ms": 483,
+  "data_origin": "LIVE",
+  "mode": "GENERAL",
+  "options": {
+    "required_vram_gib": null,
+    "include_pytorch": true,
+    "include_processes": true,
+    "redact": true,
+    "subprocess_timeout_s": 10.0,
+    "pytorch_timeout_s": 60.0,
+    "pytorch_probe_mode": "SUBPROCESS"
+  },
+  "system": {
+    "platform_profile": "WSL2",
+    "os_name": {
+      "value": "Linux",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "platform.system()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "os_release": {
+      "value": "5.15.167.4-microsoft-standard-WSL2",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "platform.release()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "os_version": {
+      "value": "#1 SMP Tue Nov 5 00:21:55 UTC 2024",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "platform.version()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "os_distribution": {
+      "value": "Ubuntu 22.04.5 LTS",
+      "status": "COLLECTED",
+      "source": "OS",
+      "method": "/etc/os-release:PRETTY_NAME",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "architecture": {
+      "value": "x86_64",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "platform.machine()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "processor_model": {
+      "value": "13th Gen Intel(R) Core(TM) i5-13500H",
+      "status": "COLLECTED",
+      "source": "OS",
+      "method": "/proc/cpuinfo:model name",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "logical_cpu_count": {
+      "value": 16,
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "os.cpu_count()",
+      "unit": null,
+      "error": null,
+      "note": "Logical CPUs in the system; this process may be restricted to fewer."
+    },
+    "memory_total_bytes": {
+      "value": 8139395072,
+      "status": "COLLECTED",
+      "source": "OS",
+      "method": "/proc/meminfo:MemTotal",
+      "unit": "bytes",
+      "error": null,
+      "note": "MemTotal: physical RAM usable by the kernel (installed RAM minus firmware and kernel reservations); excludes swap. Inside WSL2 this is the WSL2 virtual machine's memory, not the Windows host's."
+    },
+    "memory_available_bytes": {
+      "value": 1686433792,
+      "status": "COLLECTED",
+      "source": "OS",
+      "method": "/proc/meminfo:MemAvailable",
+      "unit": "bytes",
+      "error": null,
+      "note": "MemAvailable: kernel estimate of memory available to start new applications without swapping; not MemFree and not this process's memory. Inside WSL2 this is the WSL2 virtual machine's memory, not the Windows host's."
+    },
+    "python_version": {
+      "value": "3.12.12",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "platform.python_version()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "python_implementation": {
+      "value": "CPython",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "platform.python_implementation()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "python_executable": {
+      "value": "<redacted:path:1>",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "sys.executable",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "linux_environment": {
+      "value": "WSL2",
+      "status": "COLLECTED",
+      "source": "INSPECTOR",
+      "method": "classify(/proc/sys/kernel/osrelease, /proc/version)",
+      "unit": null,
+      "error": null,
+      "note": "Kernel release '5.15.167.4-microsoft-standard-WSL2' carries the WSL2 kernel marker '-microsoft-standard-WSL2' (both sources agree)."
+    }
+  },
+  "gpu": {
+    "device_count": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "NVML",
+      "method": "nvmlInit",
+      "unit": null,
+      "error": {
+        "code": "NVML_ERROR_LIBRARY_NOT_FOUND",
+        "message": "NVML Shared Library Not Found"
+      },
+      "note": null
+    },
+    "inventory_source": null,
+    "devices": [],
+    "pci_observations": {
+      "value": null,
+      "status": "NOT_SUPPORTED",
+      "source": "OS",
+      "method": "/sys/bus/pci/devices",
+      "unit": null,
+      "error": {
+        "code": "PLATFORM_NOT_SUPPORTED",
+        "message": "GPUs are not enumerated on PCI under WSL2 (FR-04; product_specification.md §4, OBS-01)."
+      },
+      "note": null
+    }
+  },
+  "driver": {
+    "nvml_binding": {
+      "value": "13.615.71",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "importlib.metadata.version",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "nvml_binding_distribution": {
+      "value": "nvidia-ml-py",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "importlib.metadata.packages_distributions",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "nvml_version": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "NVML",
+      "method": "nvmlInit",
+      "unit": null,
+      "error": {
+        "code": "NVML_ERROR_LIBRARY_NOT_FOUND",
+        "message": "NVML Shared Library Not Found"
+      },
+      "note": null
+    },
+    "driver_version": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "NVML",
+      "method": "nvmlInit",
+      "unit": null,
+      "error": {
+        "code": "NVML_ERROR_LIBRARY_NOT_FOUND",
+        "message": "NVML Shared Library Not Found"
+      },
+      "note": null
+    },
+    "driver_supported_cuda_version": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "NVML",
+      "method": "nvmlInit",
+      "unit": null,
+      "error": {
+        "code": "NVML_ERROR_LIBRARY_NOT_FOUND",
+        "message": "NVML Shared Library Not Found"
+      },
+      "note": null
+    },
+    "cuda_driver_library": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "NVML",
+      "method": "nvmlInit",
+      "unit": null,
+      "error": {
+        "code": "NVML_ERROR_LIBRARY_NOT_FOUND",
+        "message": "NVML Shared Library Not Found"
+      },
+      "note": null
+    },
+    "nvidia_smi_path": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "OS",
+      "method": "shutil.which(nvidia-smi)",
+      "unit": null,
+      "error": {
+        "code": "FileNotFoundError",
+        "message": "nvidia-smi not found on PATH or /usr/lib/wsl/lib"
+      },
+      "note": null
+    },
+    "nvidia_smi_driver_version": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "OS",
+      "method": "shutil.which(nvidia-smi)",
+      "unit": null,
+      "error": {
+        "code": "FileNotFoundError",
+        "message": "nvidia-smi not found on PATH or /usr/lib/wsl/lib"
+      },
+      "note": null
+    },
+    "nvidia_smi_cuda_version": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "OS",
+      "method": "shutil.which(nvidia-smi)",
+      "unit": null,
+      "error": {
+        "code": "FileNotFoundError",
+        "message": "nvidia-smi not found on PATH or /usr/lib/wsl/lib"
+      },
+      "note": null
+    }
+  },
+  "cuda_environment": {
+    "toolkits": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "CUDA_TOOLKIT",
+      "method": "toolkit discovery",
+      "unit": null,
+      "error": {
+        "code": "NO_TOOLKIT_FOUND",
+        "message": "no CUDA Toolkit candidates"
+      },
+      "note": null
+    },
+    "active_nvcc_path": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "CUDA_TOOLKIT",
+      "method": "shutil.which",
+      "unit": null,
+      "error": {
+        "code": "FileNotFoundError",
+        "message": "nvcc not found"
+      },
+      "note": null
+    },
+    "active_nvcc_version": {
+      "value": null,
+      "status": "NOT_DETECTED",
+      "source": "CUDA_TOOLKIT",
+      "method": "shutil.which",
+      "unit": null,
+      "error": {
+        "code": "FileNotFoundError",
+        "message": "nvcc not found"
+      },
+      "note": null
+    },
+    "environment": {
+      "CUDA_DEVICE_ORDER": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "CUDA_DEVICE_ORDER is not set"
+        },
+        "note": null
+      },
+      "CUDA_HOME": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "CUDA_HOME is not set"
+        },
+        "note": null
+      },
+      "CUDA_PATH": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "CUDA_PATH is not set"
+        },
+        "note": null
+      },
+      "CUDA_VISIBLE_DEVICES": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "CUDA_VISIBLE_DEVICES is not set"
+        },
+        "note": null
+      },
+      "LD_LIBRARY_PATH": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "LD_LIBRARY_PATH is not set"
+        },
+        "note": null
+      },
+      "NVIDIA_DRIVER_CAPABILITIES": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "NVIDIA_DRIVER_CAPABILITIES is not set"
+        },
+        "note": null
+      },
+      "NVIDIA_VISIBLE_DEVICES": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "NVIDIA_VISIBLE_DEVICES is not set"
+        },
+        "note": null
+      },
+      "PYTORCH_ALLOC_CONF": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "PYTORCH_ALLOC_CONF is not set"
+        },
+        "note": null
+      },
+      "PYTORCH_CUDA_ALLOC_CONF": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "PYTORCH_CUDA_ALLOC_CONF is not set"
+        },
+        "note": null
+      },
+      "PYTORCH_NO_CUDA_MEMORY_CACHING": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "PYTORCH_NO_CUDA_MEMORY_CACHING is not set"
+        },
+        "note": null
+      },
+      "PYTORCH_NVML_BASED_CUDA_CHECK": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "PYTORCH_NVML_BASED_CUDA_CHECK is not set"
+        },
+        "note": null
+      }
+    }
+  },
+  "frameworks": {
+    "pytorch": {
+      "status": "NOT_INSTALLED",
+      "distribution_version": {
+        "value": null,
+        "status": "NOT_INSTALLED",
+        "source": null,
+        "method": null,
+        "unit": null,
+        "error": {
+          "code": "PackageNotFoundError",
+          "message": "No package metadata was found for torch"
+        },
+        "note": null
+      },
+      "version": {
+        "value": null,
+        "status": "NOT_INSTALLED",
+        "source": null,
+        "method": null,
+        "unit": null,
+        "error": {
+          "code": "PackageNotFoundError",
+          "message": "No package metadata was found for torch"
+        },
+        "note": null
+      },
+      "cuda_build": {
+        "value": null,
+        "status": "NOT_INSTALLED",
+        "source": null,
+        "method": null,
+        "unit": null,
+        "error": {
+          "code": "PackageNotFoundError",
+          "message": "No package metadata was found for torch"
+        },
+        "note": null
+      },
+      "build_cuda_version": {
+        "value": null,
+        "status": "NOT_INSTALLED",
+        "source": null,
+        "method": null,
+        "unit": null,
+        "error": {
+          "code": "PackageNotFoundError",
+          "message": "No package metadata was found for torch"
+        },
+        "note": null
+      },
+      "rocm_build": {
+        "value": null,
+        "status": "NOT_INSTALLED",
+        "source": null,
+        "method": null,
+        "unit": null,
+        "error": {
+          "code": "PackageNotFoundError",
+          "message": "No package metadata was found for torch"
+        },
+        "note": null
+      },
+      "cudnn_version": {
+        "value": null,
+        "status": "NOT_INSTALLED",
+        "source": null,
+        "method": null,
+        "unit": null,
+        "error": {
+          "code": "PackageNotFoundError",
+          "message": "No package metadata was found for torch"
+        },
+        "note": null
+      },
+      "cuda_available": {
+        "value": null,
+        "status": "NOT_INSTALLED",
+        "source": null,
+        "method": null,
+        "unit": null,
+        "error": {
+          "code": "PackageNotFoundError",
+          "message": "No package metadata was found for torch"
+        },
+        "note": null
+      },
+      "cuda_init_warnings": [],
+      "device_count": {
+        "value": null,
+        "status": "NOT_INSTALLED",
+        "source": null,
+        "method": null,
+        "unit": null,
+        "error": {
+          "code": "PackageNotFoundError",
+          "message": "No package metadata was found for torch"
+        },
+        "note": null
+      },
+      "devices": [],
+      "allocator": {
+        "value": null,
+        "status": "NOT_INSTALLED",
+        "source": null,
+        "method": null,
+        "unit": null,
+        "error": {
+          "code": "PackageNotFoundError",
+          "message": "No package metadata was found for torch"
+        },
+        "note": null
+      },
+      "probe": {
+        "mode": "SUBPROCESS",
+        "protocol_version": 2,
+        "duration_ms": null
+      }
+    }
+  },
+  "runtime": [],
+  "diagnostics": [
+    {
+      "check_id": "D01",
+      "device_ref": null,
+      "status": "NOT_APPLICABLE",
+      "severity": "NONE",
+      "title": "PyTorch can't use CUDA",
+      "explanation": "Not evaluated: PyTorch is not installed in this Python environment.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "PyTorch section is NOT_INSTALLED",
+          "source": null,
+          "report_path": "/frameworks/pytorch/status",
+          "value": null
+        }
+      ],
+      "detection_sources": [],
+      "recommendations": [],
+      "confidence": "NOT_APPLICABLE",
+      "limitations": []
+    },
+    {
+      "check_id": "D02",
+      "device_ref": null,
+      "status": "NOT_APPLICABLE",
+      "severity": "NONE",
+      "title": "Free GPU memory vs requirement",
+      "explanation": "Not evaluated: no --required-vram supplied (general inspection).",
+      "evidence": [
+        {
+          "kind": "INFERENCE",
+          "statement": "No --required-vram supplied.",
+          "source": null,
+          "report_path": null,
+          "value": null
+        }
+      ],
+      "detection_sources": [],
+      "recommendations": [],
+      "confidence": "NOT_APPLICABLE",
+      "limitations": []
+    },
+    {
+      "check_id": "D03",
+      "device_ref": null,
+      "status": "NOT_APPLICABLE",
+      "severity": "NONE",
+      "title": "CUDA version landscape",
+      "explanation": "No CUDA version was collected from the driver, a toolkit or PyTorch.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "Driver-supported CUDA version is NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not Found)",
+          "source": "NVML",
+          "report_path": "/driver/driver_supported_cuda_version",
+          "value": null
+        }
+      ],
+      "detection_sources": [
+        "NVML"
+      ],
+      "recommendations": [],
+      "confidence": "NOT_APPLICABLE",
+      "limitations": []
+    },
+    {
+      "check_id": "D04",
+      "device_ref": null,
+      "status": "INFO",
+      "severity": "NONE",
+      "title": "NVIDIA GPU availability",
+      "explanation": "No NVIDIA GPU is accessible: NVML and nvidia-smi are unavailable and the PCI scan couldn't be used to confirm hardware presence. The rest of the report is still valid.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "NVML is NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not Found)",
+          "source": "NVML",
+          "report_path": "/driver/nvml_version",
+          "value": null
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "GPU device count is NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not Found)",
+          "source": "NVML",
+          "report_path": "/gpu/device_count",
+          "value": null
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "nvidia-smi is NOT_DETECTED (FileNotFoundError: nvidia-smi not found on PATH or /usr/lib/wsl/lib)",
+          "source": "OS",
+          "report_path": "/driver/nvidia_smi_path",
+          "value": null
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "PCI scan is NOT_SUPPORTED",
+          "source": "OS",
+          "report_path": "/gpu/pci_observations",
+          "value": null
+        }
+      ],
+      "detection_sources": [
+        "NVML",
+        "OS"
+      ],
+      "recommendations": [
+        {
+          "action": "Install or update the NVIDIA driver on the Windows host (never inside WSL2).",
+          "rationale": "Under WSL2 the GPU is provided by the Windows host driver.",
+          "reference_url": "https://docs.nvidia.com/cuda/wsl-user-guide/index.html"
+        }
+      ],
+      "confidence": "MEDIUM",
+      "limitations": [
+        "Hardware absence can't be confirmed from this snapshot; a GPU may exist without an accessible driver interface."
+      ]
+    },
+    {
+      "check_id": "D05",
+      "device_ref": null,
+      "status": "INFO",
+      "severity": "NONE",
+      "title": "Dependency availability",
+      "explanation": "PyTorch is not installed in this Python environment; framework checks were skipped. PyTorch in other environments is not inspected.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "nvidia-ml-py (pynvml) is '13.615.71'",
+          "source": "PLATFORM",
+          "report_path": "/driver/nvml_binding",
+          "value": "13.615.71"
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "PyTorch section is NOT_INSTALLED",
+          "source": null,
+          "report_path": "/frameworks/pytorch/status",
+          "value": null
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "nvidia-smi is NOT_DETECTED (FileNotFoundError: nvidia-smi not found on PATH or /usr/lib/wsl/lib)",
+          "source": "OS",
+          "report_path": "/driver/nvidia_smi_path",
+          "value": null
+        }
+      ],
+      "detection_sources": [
+        "OS",
+        "PLATFORM"
+      ],
+      "recommendations": [
+        {
+          "action": "Use the official install selector, or run the inspector inside the environment that has PyTorch. The inspector never installs it.",
+          "rationale": "PyTorch is optional.",
+          "reference_url": "https://pytorch.org/get-started/locally/"
+        }
+      ],
+      "confidence": "HIGH",
+      "limitations": []
+    },
+    {
+      "check_id": "D06",
+      "device_ref": null,
+      "status": "NOT_APPLICABLE",
+      "severity": "NONE",
+      "title": "Runtime metrics availability",
+      "explanation": "No inventoried devices.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "GPU device count is NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not Found)",
+          "source": "NVML",
+          "report_path": "/gpu/device_count",
+          "value": null
+        }
+      ],
+      "detection_sources": [
+        "NVML"
+      ],
+      "recommendations": [],
+      "confidence": "NOT_APPLICABLE",
+      "limitations": []
+    },
+    {
+      "check_id": "D07",
+      "device_ref": null,
+      "status": "NOT_APPLICABLE",
+      "severity": "NONE",
+      "title": "Temperature observation",
+      "explanation": "No inventoried devices.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "GPU device count is NOT_DETECTED (NVML_ERROR_LIBRARY_NOT_FOUND: NVML Shared Library Not Found)",
+          "source": "NVML",
+          "report_path": "/gpu/device_count",
+          "value": null
+        }
+      ],
+      "detection_sources": [
+        "NVML"
+      ],
+      "recommendations": [],
+      "confidence": "NOT_APPLICABLE",
+      "limitations": []
+    },
+    {
+      "check_id": "D08",
+      "device_ref": null,
+      "status": "NOT_APPLICABLE",
+      "severity": "NONE",
+      "title": "CUDA device visibility and ordering",
+      "explanation": "No inventoried devices and CUDA_VISIBLE_DEVICES is unset.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "CUDA_VISIBLE_DEVICES is NOT_DETECTED (NOT_SET: CUDA_VISIBLE_DEVICES is not set)",
+          "source": "ENVIRONMENT",
+          "report_path": "/cuda_environment/environment/CUDA_VISIBLE_DEVICES",
+          "value": null
+        }
+      ],
+      "detection_sources": [
+        "ENVIRONMENT"
+      ],
+      "recommendations": [],
+      "confidence": "NOT_APPLICABLE",
+      "limitations": []
+    }
+  ],
+  "readiness": null,
+  "collection_errors": [],
+  "unsupported_capabilities": [
+    {
+      "capability": "GPU.PCI_SCAN",
+      "status": "NOT_SUPPORTED",
+      "device_ref": null,
+      "reason": "GPUs are not enumerated on PCI under WSL2 (FR-04; product_specification.md §4, OBS-01)."
+    }
+  ],
+  "limitations": [
+    "This report is a point-in-time snapshot.",
+    "Findings and readiness are derived from this single snapshot only. CUDA execution isn't checked: frameworks.pytorch.cuda_available is PyTorch's own answer, the probe runs no CUDA code, a CUDA Toolkit or nvcc in cuda_environment is an installation fact, and driver.cuda_driver_library is the libcuda version NVML reports; none of them shows that code runs on a GPU.",
+    "PyTorch is inspected only in the Python interpreter running the inspector (KI-11)."
+  ],
+  "collector_runs": [
+    {
+      "collector": "system",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    },
+    {
+      "collector": "pci",
+      "status": "COMPLETED",
+      "duration_ms": 0
+    },
+    {
+      "collector": "nvml",
+      "status": "COMPLETED",
+      "duration_ms": 34
+    },
+    {
+      "collector": "driver",
+      "status": "COMPLETED",
+      "duration_ms": 86
+    },
+    {
+      "collector": "gpu_hardware",
+      "status": "COMPLETED",
+      "duration_ms": 203
+    },
+    {
+      "collector": "runtime",
+      "status": "COMPLETED",
+      "duration_ms": 0
+    },
+    {
+      "collector": "nvidia_smi",
+      "status": "COMPLETED",
+      "duration_ms": 0
+    },
+    {
+      "collector": "cuda_environment",
+      "status": "COMPLETED",
+      "duration_ms": 150
+    },
+    {
+      "collector": "pytorch",
+      "status": "COMPLETED",
+      "duration_ms": 2
+    },
+    {
+      "collector": "correlation",
+      "status": "COMPLETED",
+      "duration_ms": 0
+    }
+  ],
+  "redaction": {
+    "applied": true,
+    "categories": [
+      "DEVICE_ID",
+      "PATH",
+      "PROCESS_NAME",
+      "USER"
+    ]
+  }
+}

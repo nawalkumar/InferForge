@@ -11,7 +11,7 @@ from gpu_system_inspector.core.factory import (
 )
 from gpu_system_inspector.core.guard import describe, run_guarded
 from gpu_system_inspector.core.inspector import (
-    NOT_IMPLEMENTED_LIMITATION,
+    SCOPE_LIMITATION,
     FailedNvmlSession,
     Inspector,
     NvmlSessionStep,
@@ -19,7 +19,7 @@ from gpu_system_inspector.core.inspector import (
 )
 
 __all__ = [
-    "NOT_IMPLEMENTED_LIMITATION",
+    "SCOPE_LIMITATION",
     "PRODUCTION_LIMITATIONS",
     "DeferredPciScanner",
     "FailedNvmlSession",

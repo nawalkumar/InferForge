@@ -17,6 +17,7 @@ from gpu_system_inspector.collectors import (
     NVIDIA_ALL,
     GpuHardwareCollector,
 )
+from gpu_system_inspector.collectors.gpu_hardware import READINESS_MIG
 from gpu_system_inspector.models import (
     CollectionError,
     CollectionStatus,
@@ -56,7 +57,9 @@ def _collector(snapshot, nvml=None, smi=None, *, clock=None, pci=None):
 def _expected(snapshot):
     (run,) = (r for r in snapshot.collector_runs if r.collector == "gpu_hardware")
     errors = tuple(e for e in snapshot.collection_errors if e.collector == "gpu_hardware")
-    unsupported = tuple(u for u in snapshot.unsupported_capabilities if u.capability == NVIDIA_ALL)
+    unsupported = tuple(
+        u for u in snapshot.unsupported_capabilities if u.capability in (NVIDIA_ALL, READINESS_MIG)
+    )
     return snapshot.gpu, run, errors, unsupported
 
 
@@ -228,12 +231,13 @@ def test_the_fallback_section_keeps_the_pci_collectors_result(fixture_id):
     )
 
 
-def test_nvidia_all_only_on_macos_and_never_gpu_pci_scan():
+def test_nvidia_all_only_on_macos_readiness_mig_only_with_mig_and_never_gpu_pci_scan():
     for fixture in ALL_FIXTURES:
         collector, _ = _collector(fixture.snapshot)
         records = collector.collect().unsupported
         macos = fixture.snapshot.system.platform_profile is PlatformProfile.MACOS
-        assert [u.capability for u in records] == ([NVIDIA_ALL] if macos else [])
+        mig = [READINESS_MIG for d in fixture.snapshot.gpu.devices if d.mig_mode.value == "ENABLED"]
+        assert [u.capability for u in records] == ([NVIDIA_ALL] if macos else []) + mig
 
 
 def test_unexpected_exceptions_propagate():

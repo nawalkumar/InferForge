@@ -1,21 +1,22 @@
-"""Entry point for the `inferforge-gpu` command (docs/cli_specification.md).
+"""Entry point for the `inferforge-gpu` command (docs/cli_specification.md, IMP-C01–C03).
 
-Only `--help`, `version` and the argument interface of `inspect` exist so far. `inspect`
-validates its arguments and then reports that inspection is not implemented; it collects
-nothing and writes no report.
+`inspect` validates its options (exit 2), configures logging on stderr, runs one live
+inspection through `api.inspect`, redacts the report when `--redact` is set (before anything
+leaves the process), writes the JSON report atomically if asked, prints the text report (or
+the JSON with `--json -`) and exits with the code of §6: `5` → `4` → readiness `1`/`3` → `0`.
+`version` reads distribution metadata only.
 """
 
 from __future__ import annotations
 
 import argparse
-import contextlib
+import getpass
 import json
+import logging
 import math
-import os
 import platform
 import re
 import sys
-import tempfile
 import traceback
 from collections.abc import Sequence
 from importlib import metadata
@@ -31,6 +32,23 @@ from gpu_system_inspector import (
     __version__,
 )
 from gpu_system_inspector.cli.exit_codes import ExitCode
+from gpu_system_inspector.models import (
+    CollectionStatus,
+    CollectorRunStatus,
+    InspectionOptions,
+    InspectionReport,
+    ReadinessStatus,
+    required_bytes_for,
+)
+from gpu_system_inspector.reporting import (
+    OutputError,
+    RedactionPolicy,
+    Redactor,
+    redact,
+    render_json,
+    render_text,
+    write_atomic,
+)
 
 PROG = "inferforge-gpu"
 NVML_BINDING_DISTRIBUTION = "nvidia-ml-py"
@@ -43,9 +61,6 @@ REQUIRED_VRAM_ERROR = "--required-vram must be a positive number of GiB (for exa
 _NUMBER_WITH_UNIT = re.compile(r"^\s*[0-9]*\.?[0-9]+\s*[A-Za-z]+\s*$")
 
 INSPECT_EPILOG = """\
-NOT IMPLEMENTED YET: this development build accepts and validates these options, then
-exits with status 6 without inspecting anything.
-
 PyTorch is inspected in the Python environment that runs this command.
 
 exit status:
@@ -55,15 +70,14 @@ exit status:
   3  --required-vram given and readiness could not be determined
   4  the JSON report could not be written to PATH
   5  internal error
-  6  inspect is not implemented in this development build
 """
-
-INSPECT_NOT_IMPLEMENTED = (
-    f"error: 'inspect' is not implemented in this development build of {DISPLAY_NAME} "
-    f"{__version__}.\n"
-    "No inspection was performed: no system, GPU, driver, CUDA or PyTorch information was "
-    "collected, and no report was written."
-)
+READINESS_EXIT = {
+    ReadinessStatus.READY: ExitCode.SUCCESS,
+    ReadinessStatus.NOT_READY: ExitCode.READINESS_NOT_MET,
+    ReadinessStatus.UNKNOWN: ExitCode.READINESS_UNKNOWN,
+}
+LOG_LEVELS = (logging.WARNING, logging.INFO, logging.DEBUG)
+log = logging.getLogger("gpu_system_inspector")
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -79,7 +93,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     inspect = commands.add_parser(
         "inspect",
-        help="inspect the GPU environment (not implemented yet)",
+        help="inspect the GPU environment",
         description=(
             f"{DISPLAY_NAME}: inspect the local GPU environment across system, hardware, "
             "driver, CUDA, PyTorch and runtime layers, and explain any problems found. "
@@ -172,8 +186,110 @@ def _run_inspect(args: argparse.Namespace) -> int:
     _validate_timeout(parser, "--pytorch-timeout", args.pytorch_timeout, MAX_PYTORCH_TIMEOUT_S)
     if args.json is not None and not args.json:
         parser.error("--json requires a file path or '-'")
-    print(INSPECT_NOT_IMPLEMENTED, file=sys.stderr)
-    return ExitCode.NOT_IMPLEMENTED
+    _configure_logging(args.verbose)
+    options = InspectionOptions(
+        required_vram_gib=float(args.required_vram) if args.required_vram is not None else None,
+        include_pytorch=not args.no_pytorch,
+        include_processes=not args.no_processes,
+        redact=args.redact,
+        subprocess_timeout_s=float(args.timeout),
+        pytorch_timeout_s=float(args.pytorch_timeout),
+    )
+    policy = local_redaction_policy() if args.redact else None
+    scrub = Redactor(policy).text if policy is not None else _identity
+    try:
+        report = run_inspection(options)
+        if policy is not None:
+            scrub = Redactor.for_report(report, policy).text
+            report = redact(report, policy)
+        json_text = render_json(report)
+        text = render_text(report) if args.json != "-" else None
+    except Exception as exc:
+        message = f"{type(exc).__name__}: {exc}" if str(exc) else type(exc).__name__
+        print(
+            scrub(f"error: internal error: {message} (run with -vv for details)"),
+            file=sys.stderr,
+        )
+        if args.verbose >= 2:
+            sys.stderr.write(scrub(traceback.format_exc()))
+        return ExitCode.INTERNAL_ERROR
+    _warn(report)
+    exit_code = (
+        READINESS_EXIT[report.readiness.overall_status] if report.readiness else (ExitCode.SUCCESS)
+    )
+    if args.json is not None and args.json != "-":
+        target = Path(args.json)
+        try:
+            write_atomic(json_text, target)
+        except OutputError as exc:
+            print(
+                scrub(f"error: cannot write JSON report to {target}: {exc.reason}"),
+                file=sys.stderr,
+            )
+            exit_code = ExitCode.OUTPUT_ERROR
+        else:
+            print(scrub(f"JSON report written to {target}"), file=sys.stderr)
+    _write_stdout(json_text if text is None else text)
+    return exit_code
+
+
+def run_inspection(options: InspectionOptions) -> InspectionReport:
+    """One live inspection (imported lazily: `version` and `--help` never load the core)."""
+    from gpu_system_inspector.api import inspect
+
+    return inspect(options)
+
+
+def local_redaction_policy() -> RedactionPolicy:
+    """The local user name and home directory, used only as redaction inputs (data model §8)."""
+    try:
+        user: str | None = getpass.getuser()
+    except Exception:
+        user = None
+    try:
+        home: str | None = str(Path.home())
+    except Exception:
+        home = None
+    return RedactionPolicy(user=user, home=home)
+
+
+def _identity(text: str) -> str:
+    return text
+
+
+def _configure_logging(verbose: int) -> None:
+    handler = logging.StreamHandler(sys.stderr)
+    handler.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+    log.handlers[:] = [handler]
+    log.setLevel(LOG_LEVELS[min(verbose, 2)])
+    log.propagate = False
+
+
+def _warn(report: InspectionReport) -> None:
+    """CLI §7: one WARNING line per collector that raised, and for a missing binding."""
+    for run in report.collector_runs:
+        if run.status is CollectorRunStatus.FAILED:
+            log.warning(
+                "collector %r raised an error; see COLLECTION ERRORS in the report", run.collector
+            )
+    for error in report.collection_errors:
+        if error.collector.startswith("diagnostics."):
+            log.warning("%s could not be evaluated; see COLLECTION ERRORS", error.collector)
+    if report.driver.nvml_binding.status is CollectionStatus.NOT_INSTALLED:
+        log.warning(
+            "the required dependency %s is not installed; NVML-based fields are unavailable",
+            NVML_BINDING_DISTRIBUTION,
+        )
+
+
+def _write_stdout(text: str) -> None:
+    try:
+        sys.stdout.write(text)
+    except UnicodeEncodeError:
+        encoding = sys.stdout.encoding or "utf-8"
+        sys.stdout.flush()
+        sys.stdout.buffer.write(text.encode(encoding, errors="replace"))
+    sys.stdout.flush()
 
 
 def _validate_required_vram(parser: argparse.ArgumentParser, raw: str | None) -> None:
@@ -184,7 +300,11 @@ def _validate_required_vram(parser: argparse.ArgumentParser, raw: str | None) ->
     except ValueError:
         suffix = "; do not include a unit" if _NUMBER_WITH_UNIT.match(raw) else ""
         parser.error(REQUIRED_VRAM_ERROR + suffix)
-    if not math.isfinite(value) or not 0 < value <= MAX_REQUIRED_VRAM_GIB:
+    if (
+        not math.isfinite(value)
+        or not 0 < value <= MAX_REQUIRED_VRAM_GIB
+        or required_bytes_for(value) < 1
+    ):
         parser.error(REQUIRED_VRAM_ERROR)
 
 
@@ -212,8 +332,8 @@ def _run_version(args: argparse.Namespace) -> int:
         target = Path(args.json)
         try:
             write_atomic(_to_json(info), target)
-        except OSError as exc:
-            print(f"error: cannot write JSON to {target}: {exc.strerror or exc}", file=sys.stderr)
+        except OutputError as exc:
+            print(f"error: cannot write JSON to {target}: {exc.reason}", file=sys.stderr)
             exit_code = ExitCode.OUTPUT_ERROR
         else:
             print(f"Version information written to {target}", file=sys.stderr)
@@ -265,19 +385,3 @@ def _version_text(info: dict[str, Any]) -> str:
 
 def _to_json(data: dict[str, Any]) -> str:
     return json.dumps(data, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
-
-
-def write_atomic(text: str, path: Path) -> None:
-    """Write `text` to `path` via a temporary file in the same directory and a rename."""
-    fd, tmp_name = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as fh:
-            fh.write(text)
-        umask = os.umask(0)
-        os.umask(umask)
-        os.chmod(tmp_name, 0o666 & ~umask)
-        os.replace(tmp_name, path)
-    except BaseException:
-        with contextlib.suppress(FileNotFoundError):
-            os.unlink(tmp_name)
-        raise

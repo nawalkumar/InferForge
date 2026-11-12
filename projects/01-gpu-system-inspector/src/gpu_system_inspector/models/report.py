@@ -38,7 +38,11 @@ from gpu_system_inspector.models.enums import (
 from gpu_system_inspector.models.framework import FrameworkInfo
 from gpu_system_inspector.models.gpu import GPUInventory
 from gpu_system_inspector.models.observed import InvalidModelError
-from gpu_system_inspector.models.readiness import MAX_REQUIRED_VRAM_GIB, ReadinessResult
+from gpu_system_inspector.models.readiness import (
+    MAX_REQUIRED_VRAM_GIB,
+    ReadinessResult,
+    required_bytes_for,
+)
 from gpu_system_inspector.models.runtime import RuntimeMetrics
 from gpu_system_inspector.models.system import SystemInfo
 
@@ -78,6 +82,10 @@ class InspectionOptions:
 
     def __post_init__(self) -> None:
         validate_model(self)
+        if self.required_vram_gib is not None and required_bytes_for(self.required_vram_gib) < 1:
+            raise InvalidModelError(
+                "required_vram_gib must amount to at least 1 byte (round(GiB * 2**30) >= 1)"
+            )
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)

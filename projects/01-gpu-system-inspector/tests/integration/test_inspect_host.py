@@ -23,7 +23,7 @@ from gpu_system_inspector.adapters import OsPlatformAdapter, torch_probe_argv
 from gpu_system_inspector.adapters.outcomes import NOT_IMPLEMENTED
 from gpu_system_inspector.adapters.pci_sysfs import PCI_SCAN_UNSUPPORTED_REASONS, pci_scan_eligible
 from gpu_system_inspector.collectors import GPU_PCI_SCAN
-from gpu_system_inspector.core import NOT_IMPLEMENTED_LIMITATION, PRODUCTION_LIMITATIONS
+from gpu_system_inspector.core import PRODUCTION_LIMITATIONS, SCOPE_LIMITATION
 from gpu_system_inspector.models import (
     ENVIRONMENT_ALLOWLIST,
     FIXTURE_METHOD_PREFIX,
@@ -85,7 +85,7 @@ def test_the_public_api_produces_a_valid_live_report(host_report):
     assert parse_report_json(text) == report
     assert report.data_origin is DataOrigin.LIVE and report.mode is InspectionMode.GENERAL
     assert FIXTURE_METHOD_PREFIX not in text
-    assert NOT_IMPLEMENTED_LIMITATION in report.limitations
+    assert SCOPE_LIMITATION in report.limitations
     assert set(PRODUCTION_LIMITATIONS) <= set(report.limitations)
 
 

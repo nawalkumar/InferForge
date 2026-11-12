@@ -10,6 +10,4 @@ class ExitCode(IntEnum):
     READINESS_UNKNOWN = 3
     OUTPUT_ERROR = 4
     INTERNAL_ERROR = 5
-    # Development builds only: returned by the `inspect` placeholder. Never part of a release.
-    NOT_IMPLEMENTED = 6
     INTERRUPTED = 130

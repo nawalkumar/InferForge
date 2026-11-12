@@ -110,8 +110,9 @@ resolution; the PCI scanner built from that environment; ② `pci`; ③ `nvml` (
 `cuda_environment` (files and `nvcc` only, no NVML); ⑥ `pytorch` (the probe child, after
 everything else, so nothing before it touches CUDA); ⑦ `correlation` (from the GPU and
 PyTorch sections already collected: no NVML session, no probe, no process); report
-assembly and schema validation. Readiness (⑧, Mode B raises `NotImplementedError`),
-diagnostics (⑨), redaction (⑩) and the CLI renderers aren't implemented, and the report says so in `limitations`. A toolkit found in
+then readiness (⑧, Mode B only), diagnostics D01–D08 (⑨) and report assembly with schema
+validation (DEC-50). The CLI then redacts (⑩, `--redact`, before anything leaves the
+process), writes the JSON atomically and renders the text report. A toolkit found in
 ⑤ is an installation fact, and PyTorch's `cuda_available` in ⑥ is PyTorch's answer: neither
 is proof that CUDA code runs. In
 production the NVML, `nvidia-smi` and command adapters are real (DEC-45): `nvml` initialises

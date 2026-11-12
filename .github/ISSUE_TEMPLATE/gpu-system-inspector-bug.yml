@@ -1,0 +1,76 @@
+name: "GPU System Inspector: bug report"
+description: Wrong, misleading or crashing output from inferforge-gpu (Project 01).
+title: "[gpu-inspector] "
+labels: ["project-01", "bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please attach a **redacted** report: `--redact` replaces paths,
+        process names, GPU UUIDs, PCI bus IDs, your user name and home directory.
+        Read projects/01-gpu-system-inspector/docs/troubleshooting.md first: many statuses
+        (NOT_DETECTED, NOT_SUPPORTED) are the report working as intended.
+  - type: textarea
+    id: version
+    attributes:
+      label: "`inferforge-gpu version` output"
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Native Linux
+        - WSL2
+        - Windows
+        - macOS
+        - Container (Docker, Kubernetes, Colab, ...)
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU model(s) and driver version, if known
+      placeholder: "e.g. 1x RTX 4090, driver 550.54; or 'no NVIDIA GPU'"
+  - type: textarea
+    id: command
+    attributes:
+      label: Command and exit code
+      placeholder: |
+        inferforge-gpu inspect --required-vram 8
+        exit code: 3
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What the report says (relevant excerpt)
+      description: Paste the section or finding that is wrong. Use the redacted output.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected, and the evidence for it
+      description: For example the matching `nvidia-smi` output or PyTorch's own answer.
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: Redacted JSON report
+      description: "`inferforge-gpu inspect --redact --json report.json`, then attach or paste report.json."
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: The report's header says `data origin LIVE` (not fixture data from the synthetic showcase).
+          required: true
+        - label: I attached only redacted output, or I am fine with the identifiers in it being public.
+          required: true

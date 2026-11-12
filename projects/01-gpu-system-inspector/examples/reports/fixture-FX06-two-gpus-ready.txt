@@ -1,0 +1,220 @@
+*** FIXTURE DATA — NOT A REAL MEASUREMENT ***
+GPU System Inspector 0.1.0 · InferForge · report schema 1.0
+Generated 2026-01-01T00:00:00Z · mode READINESS · data origin FIXTURE
+
+SYSTEM
+  Platform                LINUX
+  OS                      Linux (PLATFORM)
+  OS release              6.8.0-synthetic (PLATFORM)
+  OS version              #1 SMP synthetic (PLATFORM)
+  Distribution            Synthetic Linux 24.04 (fixture) (OS)
+  Linux environment       NATIVE_LINUX (INSPECTOR)
+  Architecture            x86_64 (PLATFORM)
+  Processor               Synthetic CPU (fixture) (OS)
+  Logical CPUs            16 (PLATFORM)
+  Memory total            64.0 GiB (OS)
+  Memory available        48.0 GiB (OS)
+  Python                  3.12.12 (PLATFORM) · CPython (PLATFORM)
+  Python executable       /opt/synthetic/venv/bin/python (PLATFORM)
+
+DEVICES
+  NVIDIA devices          2 (NVML) via NVML
+  nvml:0  Synthetic GPU B (fixture) (NVML)
+    UUID                    GPU-bbbbbbbb-0000-4000-8000-00000000000b (NVML)
+    PCI bus ID              00000000:01:00.0 (NVML)
+    Total memory            12.0 GiB (NVML)
+    Compute capability      8.9 (NVML)
+    MIG mode                DISABLED (NVML)
+  nvml:1  Synthetic GPU A (fixture) (NVML)
+    UUID                    GPU-aaaaaaaa-0000-4000-8000-00000000000a (NVML)
+    PCI bus ID              00000000:02:00.0 (NVML)
+    Total memory            24.0 GiB (NVML)
+    Compute capability      8.9 (NVML)
+    MIG mode                DISABLED (NVML)
+  PCI scan                2 display device(s), 2 NVIDIA (OS)
+    PCI 0000:01:00.0        NVIDIA 0x2684 · driver nvidia (OS)
+    PCI 0000:02:00.0        NVIDIA 0x2684 · driver nvidia (OS)
+
+DRIVER & CUDA
+  Driver version          550.54.15 (NVML)
+  NVML version            12.550.54.15 (NVML)
+  NVML binding            13.615.71 (PLATFORM) · distribution nvidia-ml-py
+  Driver CUDA             Driver supports CUDA up to 12.4 (NVML)
+  CUDA driver library     12.4 (NVML)
+  nvidia-smi              /usr/bin/nvidia-smi (NVIDIA_SMI)
+  nvidia-smi driver       550.54.15 (NVIDIA_SMI)
+  nvidia-smi CUDA         12.4 (NVIDIA_SMI)
+
+CUDA TOOLKIT
+  Toolkit                 CUDA Toolkit 12.4.131 (CUDA_TOOLKIT) at /usr/local/cuda-12.4 (found via
+                          CUDA_HOME, NVCC_ON_PATH, DEFAULT_LOCATION)
+    nvcc                    /usr/local/cuda-12.4/bin/nvcc (CUDA_TOOLKIT)
+  Active nvcc             CUDA Toolkit 12.4.131 (nvcc)
+  Active nvcc path        /usr/local/cuda-12.4/bin/nvcc (CUDA_TOOLKIT)
+  CUDA_DEVICE_ORDER       —  NOT_DETECTED (NOT_SET: CUDA_DEVICE_ORDER is not set)
+  CUDA_HOME               /usr/local/cuda-12.4 (ENVIRONMENT)
+  CUDA_PATH               —  NOT_DETECTED (NOT_SET: CUDA_PATH is not set)
+  CUDA_VISIBLE_DEVICES    —  NOT_DETECTED (NOT_SET: CUDA_VISIBLE_DEVICES is not set)
+  LD_LIBRARY_PATH         —  NOT_DETECTED (NOT_SET: LD_LIBRARY_PATH is not set)
+  NVIDIA_DRIVER_CAPABILITIES —  NOT_DETECTED (NOT_SET: NVIDIA_DRIVER_CAPABILITIES is not set)
+  NVIDIA_VISIBLE_DEVICES  —  NOT_DETECTED (NOT_SET: NVIDIA_VISIBLE_DEVICES is not set)
+  PYTORCH_ALLOC_CONF      —  NOT_DETECTED (NOT_SET: PYTORCH_ALLOC_CONF is not set)
+  PYTORCH_CUDA_ALLOC_CONF —  NOT_DETECTED (NOT_SET: PYTORCH_CUDA_ALLOC_CONF is not set)
+  PYTORCH_NO_CUDA_MEMORY_CACHING —  NOT_DETECTED (NOT_SET: PYTORCH_NO_CUDA_MEMORY_CACHING is not
+                                 set)
+  PYTORCH_NVML_BASED_CUDA_CHECK —  NOT_DETECTED (NOT_SET: PYTORCH_NVML_BASED_CUDA_CHECK is not set)
+
+PYTORCH  (in this Python environment)
+  Status                  COLLECTED
+  Version                 2.4.1+cu124 (PYTORCH)
+  Distribution version    2.4.1 (PYTORCH)
+  CUDA build              yes (PYTORCH)
+  Build CUDA              PyTorch built with CUDA 12.4 (PYTORCH)
+  ROCm build              no (PYTORCH)
+  cuDNN                   90100 (PYTORCH)
+  CUDA available          yes (PYTORCH)
+  Device count            2 (PYTORCH)
+  cuda:0  Synthetic GPU A (fixture) (PYTORCH)
+    NVML device             nvml:1 (INSPECTOR)
+    Total memory            24.0 GiB (PYTORCH)
+    Compute capability      8.9 (PYTORCH)
+  cuda:1  Synthetic GPU B (fixture) (PYTORCH)
+    NVML device             nvml:0 (INSPECTOR)
+    Total memory            12.0 GiB (PYTORCH)
+    Compute capability      8.9 (PYTORCH)
+  Probe                   SUBPROCESS · protocol 2
+
+RUNTIME SNAPSHOT
+  nvml:0  sampled at 2026-01-01T00:00:00+00:00
+    GPU utilization         3 % (NVML)
+    Memory bus activity     1 % (NVML)
+    Memory total            12.0 GiB (NVML)
+    Memory used             2.0 GiB used (NVML)
+    Memory free             10.0 GiB free (NVML)
+    Memory reserved         0.5 GiB (NVML)
+    Temperature             45 °C (NVML)
+    Slowdown threshold      90 °C (NVML)
+    Power draw              31.5 W (NVML)
+    Power limit             450.0 W (NVML)
+    Processes               1 (NVML)
+      pid 4242                COMPUTE · python (OS) · 2.0 GiB (NVML)
+  nvml:1  sampled at 2026-01-01T00:00:00+00:00
+    GPU utilization         3 % (NVML)
+    Memory bus activity     1 % (NVML)
+    Memory total            24.0 GiB (NVML)
+    Memory used             4.0 GiB used (NVML)
+    Memory free             20.0 GiB free (NVML)
+    Memory reserved         0.5 GiB (NVML)
+    Temperature             45 °C (NVML)
+    Slowdown threshold      90 °C (NVML)
+    Power draw              31.5 W (NVML)
+    Power limit             450.0 W (NVML)
+    Processes               1 (NVML)
+      pid 4242                COMPUTE · python (OS) · 2.0 GiB (NVML)
+
+READINESS  required free memory: 16.0 GiB (17179869184 bytes)
+  nvml:0  Synthetic GPU B (fixture)  NOT_READY  free 10.0 GiB (NVML), short by 6.0 GiB — Total
+      memory 12.0 GiB is below the required 16.0 GiB.
+  nvml:1  Synthetic GPU A (fixture)  READY  free 20.0 GiB (NVML), margin +4.0 GiB — Observed 20.0
+      GiB free (NVML), at least the required 16.0 GiB.
+  overall: READY (AT_LEAST_ONE_DEVICE_READY)
+  limitation: Single snapshot at 2026-01-01T00:00:00+00:00.
+  Note: Free memory at least equal to the requested amount was observed at the time of inspection.
+  This does not guarantee that a model will fit or run: actual usage depends on weights,
+  activations, KV cache, framework/allocator overhead, CUDA context size, fragmentation and other
+  processes that may allocate memory after this snapshot.
+
+FINDINGS
+  [INFO] D03 CUDA version landscape
+      Driver supports CUDA up to 12.4 — the newest CUDA version the installed driver supports, not
+      the installed toolkit. CUDA Toolkit 12.4.131 (nvcc) — a local development toolkit, needed to
+      compile CUDA code, not to run PyTorch binary packages. PyTorch built with CUDA 12.4 — the CUDA
+      version PyTorch was built with.
+      observed: Driver-supported CUDA version is '12.4' (NVML)
+      observed: Active nvcc version is '12.4.131' (CUDA_TOOLKIT)
+      observed: PyTorch build CUDA version is '12.4' (PYTORCH)
+      observed: Toolkit /usr/local/cuda-12.4 version is '12.4.131' (CUDA_TOOLKIT)
+      confidence: HIGH · severity: NONE
+      limitation: Only major-version comparisons are used (CUDA minor version compatibility).
+      limitation: Forward-compatibility (cuda-compat) installations aren't detected.
+      limitation: Toolkit detection relies on version.json and nvcc --version.
+  [INFO] D07 Temperature observation (nvml:0)
+      Measured 45 °C at 2026-01-01T00:00:00+00:00; device-reported slowdown threshold 90 °C.
+      observed: GPU temperature (°C) is 45 (NVML)
+      observed: Slowdown threshold (°C) is 90 (NVML)
+      confidence: HIGH · severity: NONE
+      limitation: A single temperature sample cannot establish whether the GPU is thermally
+                  throttling or how temperature changes under load (C15). For sustained observation
+                  use nvidia-smi monitoring or DCGM.
+  [INFO] D07 Temperature observation (nvml:1)
+      Measured 45 °C at 2026-01-01T00:00:00+00:00; device-reported slowdown threshold 90 °C.
+      observed: GPU temperature (°C) is 45 (NVML)
+      observed: Slowdown threshold (°C) is 90 (NVML)
+      confidence: HIGH · severity: NONE
+      limitation: A single temperature sample cannot establish whether the GPU is thermally
+                  throttling or how temperature changes under load (C15). For sustained observation
+                  use nvidia-smi monitoring or DCGM.
+  [INFO] D08 CUDA device visibility and ordering
+      PyTorch cuda:0 is NVML device 1; PyTorch cuda:1 is NVML device 0.
+      observed: CUDA_VISIBLE_DEVICES is NOT_DETECTED (NOT_SET: CUDA_VISIBLE_DEVICES is not set)
+                (ENVIRONMENT)
+      observed: PyTorch cuda:0 correlation is 'nvml:1' (INSPECTOR)
+      observed: PyTorch cuda:1 correlation is 'nvml:0' (INSPECTOR)
+      confidence: HIGH · severity: LOW
+  [PASS] D01 PyTorch can't use CUDA
+      PyTorch reports that CUDA is available.
+      observed: torch.cuda.is_available() is True (PYTORCH)
+      confidence: HIGH · severity: NONE
+      limitation: Causes are inferred from the collected snapshot; other causes (for example
+                  corrupted installations or unusual library paths) are possible.
+  [PASS] D02 Free GPU memory vs requirement
+      At least one device had at least 16 GiB free when sampled.
+      observed: Readiness READY (AT_LEAST_ONE_DEVICE_READY) for a requirement of 16 GiB (17179869184
+                bytes)
+      observed: nvml:0: free 10.0 GiB, total 12.0 GiB, required 16.0 GiB, margin -6442450944 bytes —
+                NOT_READY (INSUFFICIENT_TOTAL_MEMORY) (NVML)
+      observed: nvml:1: free 20.0 GiB, total 24.0 GiB, required 16.0 GiB, margin 4294967296 bytes —
+                READY (SUFFICIENT_FREE_MEMORY) (NVML)
+      confidence: HIGH · severity: NONE
+      limitation: Free memory at least equal to the requested amount was observed at the time of
+                  inspection. This does not guarantee that a model will fit or run: actual usage
+                  depends on weights, activations, KV cache, framework/allocator overhead, CUDA
+                  context size, fragmentation and other processes that may allocate memory after
+                  this snapshot.
+      limitation: Single snapshot at 2026-01-01T00:00:00+00:00.
+  [PASS] D04 NVIDIA GPU availability
+      NVML reports 2 device(s).
+      observed: NVML is '12.550.54.15' (NVML)
+      observed: GPU device count is 2 (NVML)
+      observed: nvidia-smi is '/usr/bin/nvidia-smi' (NVIDIA_SMI)
+      observed: PCI scan is COLLECTED (2 NVIDIA device(s)) (OS)
+      confidence: HIGH · severity: NONE
+  [PASS] D05 Dependency availability
+      All dependencies the inspector uses are present.
+      observed: nvidia-ml-py (pynvml) is '13.615.71' (PLATFORM)
+      observed: PyTorch section is COLLECTED (2.4.1+cu124) (PYTORCH)
+      observed: nvidia-smi is '/usr/bin/nvidia-smi' (NVIDIA_SMI)
+      confidence: HIGH · severity: NONE
+  [PASS] D06 Runtime metrics availability (nvml:0)
+      All runtime metrics were collected.
+      observed: All 13 runtime fields were collected
+      confidence: HIGH · severity: NONE
+  [PASS] D06 Runtime metrics availability (nvml:1)
+      All runtime metrics were collected.
+      observed: All 13 runtime fields were collected
+      confidence: HIGH · severity: NONE
+
+UNSUPPORTED
+  none
+
+COLLECTION ERRORS
+  none
+
+LIMITATIONS
+  - This report is a point-in-time snapshot.
+  - Findings and readiness are derived from this single snapshot only. CUDA execution isn't checked:
+    frameworks.pytorch.cuda_available is PyTorch's own answer, the probe runs no CUDA code, a CUDA
+    Toolkit or nvcc in cuda_environment is an installation fact, and driver.cuda_driver_library is
+    the libcuda version NVML reports; none of them shows that code runs on a GPU.
+
+*** FIXTURE DATA — NOT A REAL MEASUREMENT ***

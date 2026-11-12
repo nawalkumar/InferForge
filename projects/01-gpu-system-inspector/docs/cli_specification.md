@@ -1,8 +1,8 @@
 # CLI Specification — Project 01: GPU System Inspector
 
 Status: **Specification approved 2026-11-04.** Command name and JSON option approved
-(DEC-03, DEC-25). Implementation status: `--help`, `version` and the `inspect` argument
-interface exist (Stage 1). `inspect` is a placeholder that exits 6 (§6). See
+(DEC-03, DEC-25). Implementation status: `--help`, `version` and `inspect` are implemented
+(IMP-C01–C03, DEC-50); the temporary exit code 6 was removed as §6 required. See
 [app_tracker.md](app_tracker.md).
 
 ## 1. Command tree
@@ -203,7 +203,7 @@ READINESS  required free memory: 8.0 GiB (8589934592 bytes)
 | 3 | `READINESS_UNKNOWN` | Mode B, report produced, `overall_status = UNKNOWN`. |
 | 4 | `OUTPUT_ERROR` | `--json PATH` couldn't be written (no partial file left). The text report is still printed. |
 | 5 | `INTERNAL_ERROR` | Unexpected exception outside the collector/rule guards. |
-| 6 | `NOT_IMPLEMENTED` | **Development builds only (Stage 1 bootstrap).** `inspect` validated its arguments but isn't implemented yet: nothing was collected and no report was written. Removed when `inspect` is implemented; never returned by a V1 release. |
+| ~~6~~ | ~~`NOT_IMPLEMENTED`~~ | **Removed** (DEC-50): it existed only while `inspect` was a Stage 1 placeholder and is never returned. |
 | 130 | `INTERRUPTED` | `KeyboardInterrupt` (Ctrl-C). |
 
 Precedence when several apply: `2` (before inspection) → `5` → `4` → readiness code

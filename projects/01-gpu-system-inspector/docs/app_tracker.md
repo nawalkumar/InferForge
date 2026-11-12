@@ -3,7 +3,7 @@
 **This file is the single source of truth for Project 01 status.** Other documents
 describe *what* to build; only this file says *where it stands*.
 
-Last updated: **2026-11-11 (pre-diagnostics governance reconciliation after the post-IMP-K07 review; earlier the same day: device correlation, IMP-K07)**.
+Last updated: **2026-11-11 (public-readiness and hardware-validation preparation sprint, §1.14: hardware tests HW-01–HW-13 and the evidence bundle written, HW-13 passed on this WSL2 host, NVIDIA hardware still `BLOCKED`; Python 3.11 tested from the wheel; one CLI defect fixed (KI-40); AC42 tested; contributor and user documentation; earlier the same day: demo-ready completion sprint: diagnostics, readiness, text report, redaction, atomic writer and the CLI `inspect`, §1.13, DEC-50; earlier the same day: governance reconciliation and device correlation)**.
 Phase: **Stages 1–5.1 and 6 complete (Stage 6 synthetic and WSL2-host validation; native-Linux PCI hardware validation HW-02 `BLOCKED`). Data foundation, synthetic fixtures, adapter contracts and
 the first production collector (system/platform facts from the real host OS, read-only;
 macOS via `sysctlbyname`; conservative Linux-environment classification) are in place. The PCI
@@ -28,10 +28,12 @@ inspector's own interpreter, or in-process on request) and its collector report 
 build, PyTorch's CUDA answer and devices, separately, and reproduce every fixture's section
 (§1.11); no CUDA code is run. **Device correlation (DEC-09, DEC-49):** each PyTorch device is
 related to an NVML device by UUID, then PCI bus ID, never by index, from the sections already
-collected; ambiguity stays unresolved (§1.12). Every collector is implemented. Not
-implemented: readiness, diagnostics,
-redaction and the CLI `inspect` command (their report parts say `NOT_IMPLEMENTED`). No
-NVIDIA hardware validation has been possible (HW-01, HW-02 `BLOCKED`).**
+collected; ambiguity stays unresolved (§1.12). Every collector is implemented. **Demo-ready
+completion sprint (DEC-50):** diagnostics D01–D08, Mode B readiness, the text report,
+redaction, the atomic writer and `inferforge-gpu inspect` are implemented and `TESTED`
+synthetically (every fixture's findings and readiness runs reproduced) and run live on this
+WSL2 host without NVIDIA (§1.13). No NVIDIA hardware validation has been possible (HW-01,
+HW-02 `BLOCKED`); FR-11 stays incomplete (KI-36).**
 
 ## Status vocabulary
 
@@ -73,16 +75,16 @@ validation; user verification is recorded only with the user's explicit confirma
 | Product requirements | `PLANNED` | 25 FR + 17 NFR specified and approved; implementation pending |
 | Architecture | `PLANNED` | Approved. DEC-03, -05, -17, -21, -25, -26, -27 approved; project configuration (ARC-05) applied. Stage 4 adapter-boundary decisions DEC-28–DEC-34 applied (need review) |
 | Data models | `TESTED` | Stage 2 (§1.2). Schema `1.0` still a draft until AC09 is `TESTED`. |
-| CLI | `IN_PROGRESS` | Stage 1 bootstrap `TESTED` (§1.1); `inspect` is a placeholder |
-| Collectors | `IN_PROGRESS` | System collector and environment collection `TESTED` (Stage 5, §1.5); PCI collector `TESTED` synthetically, with fixture parity and a WSL2 host run (Stages 6.3–6.5, §1.6.3–§1.6.5); GPU hardware collector `TESTED` synthetically and the core orchestrates all three (§1.7); driver, runtime, CUDA, framework and correlation collectors not written |
-| Adapters | `IN_PROGRESS` | Interfaces `TESTED` with fakes (Stage 4); production `OsPlatformAdapter` `TESTED` on this Linux/WSL2 host (Stage 5); production `PciSysfsAdapter` `TESTED` synthetically (Stage 6.1, fail-closed native-Linux gate); production command runner, NVML and `nvidia-smi` adapters `TESTED` (stub binding, fake runner, real fake executables; live on this WSL2 host without NVIDIA, §1.8); PyTorch probe and toolkit adapters not written |
-| Diagnostics | `PLANNED` | D01–D08 |
-| Readiness | `PLANNED` | |
-| Reporting | `IN_PROGRESS` | JSON serialisation and schema `TESTED` (Stage 2); report assembly `TESTED` (IMP-P01, §1.7); text report, redaction pending |
-| Testing | `IN_PROGRESS` | 1985 tests pass (through the NVIDIA adapter milestone, including 17 host tests), coverage 97.17% (target 92%). Synthetic fixtures, conforming fakes and contract tests done; tests of real adapters/collectors/engines pending |
-| Hardware validation | `BLOCKED` | No NVIDIA hardware on the development machine |
+| CLI | `TESTED` | `inspect` implemented per the CLI specification (IMP-C01–C03, §1.13): options, validation, logging, JSON/text routing, redaction, exit codes 0/1/2/3/4/5/130; live on this WSL2 host |
+| Collectors | `IN_PROGRESS` | System collector and environment collection `TESTED` (Stage 5, §1.5); PCI collector `TESTED` synthetically, with fixture parity and a WSL2 host run (Stages 6.3–6.5, §1.6.3–§1.6.5); GPU hardware collector `TESTED` synthetically and the core orchestrates all three (§1.7); driver, runtime, CUDA environment, PyTorch and correlation collectors `TESTED` (§1.9–§1.12); FR-11 graphics processes missing (KI-36) |
+| Adapters | `IN_PROGRESS` | Interfaces `TESTED` with fakes (Stage 4); production `OsPlatformAdapter` `TESTED` on this Linux/WSL2 host (Stage 5); production `PciSysfsAdapter` `TESTED` synthetically (Stage 6.1, fail-closed native-Linux gate); production command runner, NVML and `nvidia-smi` adapters `TESTED` (stub binding, fake runner, real fake executables; live on this WSL2 host without NVIDIA, §1.8); toolkit locator and PyTorch probe `TESTED` (§1.10, §1.11) |
+| Diagnostics | `TESTED` | D01–D08 (§1.13): golden findings for all 30 fixture report cases; never on NVIDIA hardware |
+| Readiness | `TESTED` | IMP-R01 (§1.13): all 9 Mode B fixture runs; never on NVIDIA hardware |
+| Reporting | `TESTED` | JSON serialisation and schema (Stage 2); report assembly (IMP-P01, §1.7); text report, redaction, atomic writer (IMP-P03–P05, §1.13). Schema `1.0` still a draft (KI-20) |
+| Testing | `IN_PROGRESS` | See §1.13 for the current counts and coverage (target 92%). Hardware tests not run (§13) |
+| Hardware validation | `BLOCKED` | No NVIDIA hardware on the development machine. Hardware tests HW-01–HW-13, the evidence bundle and the Colab/native-Linux procedure are ready (§1.14, [hardware_validation.md](hardware_validation.md)); HW-13 passed on this WSL2 host |
 | Documentation | `USER_VERIFIED` | Specification approved by the user 2026-11-04 ("approved for implementation"). Stage 1 amendments listed in §7 need review. |
-| Demonstration | `NOT_STARTED` | Live runs only, after implementation; no demo mode (DEC-17) |
+| Demonstration | `IN_PROGRESS` | DEMO-01 live WSL2 run `TESTED`; DEMO-03 labelled synthetic showcase script `IMPLEMENTED` (not a CLI mode, DEC-17); journeys A–G and recording plan in [demonstration.md](demonstration.md) (§1.14); DEMO-02 `BLOCKED` |
 | Final review | `NOT_STARTED` | After implementation |
 
 ### Implementation readiness
@@ -112,7 +114,8 @@ validation; user verification is recorded only with the user's explicit confirma
 | CUDA environment (OQ-10 → DEC-47; IMP-A06 locator, IMP-K05 collector; KI-28) | **Complete** (§1.10): `TESTED` synthetically and on this WSL2 host (no toolkit); HW-05 not run; documentation awaits user review |
 | PyTorch (IMP-A07 probe, IMP-K06 collector; DEC-48; KI-35) | **Complete** (§1.11): `TESTED` synthetically, with the probe child run for real against a stub `torch`, and on this WSL2 host (PyTorch not installed); HW-04, HW-06 `BLOCKED`; documentation awaits user review |
 | Device correlation (IMP-K07; DEC-09 applied, DEC-49) | **Complete** (§1.12): `TESTED` synthetically and on this WSL2 host (nothing to correlate); HW-09 `BLOCKED`; documentation awaits user review |
-| **Verdict** | **Every collector of the inspection pipeline is implemented and validated synthetically, with real NVML, `nvidia-smi`, toolkit and PyTorch adapters (system, PCI, GPU hardware, driver, runtime metrics, CUDA environment, PyTorch, correlation, report).** HW-01, HW-02 `BLOCKED`. Not yet a release: diagnostics, readiness, redaction and the CLI `inspect` command remain. Next recommended: the diagnostics engine (IMP-D*) or the CLI (IMP-C01, IMP-P03), on request. |
+| Demo-ready completion sprint (IMP-D00–D08, IMP-R01, IMP-P03–P05, IMP-C01–C03; DEC-50; KI-15, KI-32, KI-33) | **Complete** (§1.13): `TESTED` synthetically and live on this WSL2 host (no NVIDIA); documentation awaits user review |
+| **Verdict** | **Functional MVP: `inferforge-gpu inspect` runs collection, diagnostics, readiness, text/JSON reports, redaction and atomic writing end to end, validated synthetically and live on one WSL2 host without NVIDIA.** Not a release: HW-01 to HW-12 `BLOCKED`, FR-11 incomplete (KI-36), Python 3.11 untested, schema `1.0` not frozen, owner decisions open (§1.13 open items). |
 
 ### 1.1 Stage 1 tracker (2026-11-04)
 
@@ -478,9 +481,69 @@ include); coverage **97.24%**.
 | K07-DOC | **Documentation**: DEC-49, DEC-09 applied; architecture §3, §4.2, §4.7, §4.11; data flow §1, §1.2, §2; data model §5.4; testing strategy §4, §5 | `IMPLEMENTED` (needs user review) | `docs/*.md` | — | — |
 | K07-QG | **Quality gates** | `TESTED` | — | 2410 passed (20 `host`); coverage 97.24% (`collectors/correlation.py` 99%); root 34 passed; `check_dependencies.py`, `ruff check .`, `ruff format --check .` (154 files), `uv lock --check` clean; isolated wheel (correlation shipped; requires only `nvidia-ml-py`; importing it loads no torch, `pynvml` or `subprocess`) 2383 passed + 27 skipped, `api.inspect()` OK from the wheel | — |
 
+### 1.13 Demo-ready completion sprint — IMP-D00–D08, IMP-R01, IMP-P03–P05, IMP-C01–C03 (DEC-50, 2026-11-11)
+
+Diagnostics and readiness are pure functions of the collected snapshot (`models` only,
+enforced by `unit/test_boundaries.py`): no hardware discovery is repeated, NVML and CUDA are
+never initialised by them, and PyTorch isn't needed. `Inspector.run` runs readiness (Mode B)
+and the diagnostics engine after collection; the CLI then redacts (if asked), writes the JSON
+atomically, renders the text report and exits per CLI spec §6. One fixture expectation was
+corrected (DEC-50 (3): D02 `UNKNOWN` confidence `NOT_APPLICABLE`, as the specification
+says); the specification itself wasn't changed. One capability-ownership gap was closed:
+`READINESS.MIG` (in FX14's expected snapshot, required by AC39) had no owner and is now
+emitted by the GPU hardware collector for MIG-enabled devices (DEC-50 (8)). No dependency,
+lock, schema or root-workspace change.
+
+Suite: **2716 passed** (21 `host`); isolated wheel **2689 passed, 27 skipped** (KI-23); coverage
+**97.10%**; root 34 passed; ruff, format, `uv lock --check` and `check_dependencies.py` clean.
+
+| ID | Item | Status | Files | Test evidence | Known limitations |
+| -- | ---- | ------ | ----- | ------------- | ----------------- |
+| D00-ENGINE | **Engine** `DiagnosticsEngine(rules).evaluate(DiagnosticInput) -> DiagnosticsResult(findings, errors)`; guard (`UNKNOWN` "Check could not be evaluated" + `diagnostics.Dxx` `CollectionError`), output checks (≥ 1 finding, one per device, own check ID), `(check_id, device_ref)` order; evidence helpers; reference-URL allowlist | `TESTED` | `diagnostics/engine.py`, `evidence.py`, `context.py` | `unit/test_diagnostics_rules.py` (engine guard, malformed output, ordering) | — |
+| D01-D08 | **Rules** per the decision tables (diagnostics spec §3), including causes D01.1–D01.8, the D03 legend, D04 rows 1–9, D05 contributions, per-device D06/D07, D08 rows 1–7 | `TESTED` (synthetic) | `diagnostics/rules.py` | `integration/test_diagnostics_golden.py`: status, severity, confidence and device of every check for all 30 report cases (21 Mode A, 9 Mode B) through the real `Inspector`; wording rules (§5) and pointer resolution over every finding; `unit/test_diagnostics_rules.py` (25): rows no fixture reaches (ROCm, hidden devices, unbound driver, NVML permission, undeterminable presence, D03 rows 3–4, D04 rows 5/6/9, D05 LOW/skipped, D06 permission, D08 rows 2–6) | Never on NVIDIA hardware (HW-04, HW-09). D01 cause codes appear as `D01.n` in the explanation; the inference text says what each means. |
+| KI32-33 | **Absence policy** (DEC-50 (2)): "no NVIDIA GPU" only from macOS, NVML counting 0, or a `COLLECTED` **complete** PCI scan without NVIDIA while NVML is `NOT_DETECTED`; `PARTIAL`, `NOT_DETECTED` and `NOT_SUPPORTED` scans → D04 row 8 / `DEVICE_PRESENCE_UNKNOWN` | `TESTED` | `diagnostics/context.py`, `readiness/engine.py` | `unit/test_diagnostics_rules.py::test_readiness_never_concludes_absence_from_a_partial_pci_scan`; FX04b (WSL2) | No fixture with a whole-scan PCI `NOT_DETECTED` (unit-tested through the shared predicate). |
+| R01-ENGINE | **Readiness** `ReadinessEngine().assess(snapshot, gib)` per architecture §4.9; D02 maps from it | `TESTED` (synthetic) | `readiness/engine.py` | All 9 Mode B runs: overall status/reason, every device status/reason, margins (FX01, FX06, FX07, FX19 boundary `free == required`), disclaimer; MIG, missing runtime record, NVML-zero, partial PCI (unit) | Single snapshot; never on NVIDIA hardware (HW-12). |
+| P03-TEXT | **Text report** `render_text` per CLI spec §5.2: header, fixed section order, values with unit and source, missing values as status and reason, three CUDA labels, "Memory bus activity", readiness ending with the disclaimer, findings by status rank, fixture banner first and last, no ANSI, lines ≤ 100 | `TESTED` | `reporting/text_report.py` | `unit/test_reporting_output.py`; golden files `integration/golden/FX01.txt`, `FX03.txt`, `FX07.txt`, `FX13.txt` | Golden files are regression snapshots of this implementation; their content was reviewed, not independently specified. |
+| P04-REDACT | **Redaction** `redact(report, RedactionPolicy)` per data model §8 over every string (fields and free text), re-validated; numbered path placeholders (DEC-50 (5)); stable device ordinals across NVML, sysfs and PyTorch spellings; user name and home directory as inputs only | `TESTED` | `reporting/redaction.py` | `unit/test_reporting_output.py` (all fixtures stay schema-valid, structure and statuses unchanged, ordinals consistent, warnings and error messages redacted, categories restrictable); `integration/test_cli.py` (text, JSON and stderr free of the literals; `~` and `<redacted:user>` in messages) | Over-redaction is possible when a user name is a common word in free text; structural fields are never touched. Logging filter (IMP-P04 note) not added: log lines carry collector names only. |
+| P05-WRITER | **Atomic writer** `write_atomic` + `OutputError(path, reason)`: temp file in the target directory, rename, `0o666 & ~umask`, temp removed on any failure (also on Ctrl-C) | `TESTED` | `reporting/writer.py` (the CLI's own copy removed) | `unit/test_reporting_output.py` (replace, rename failure, interrupt, directory, missing parent); CLI: missing parent, directory, read-only directory | — |
+| C01-C03 | **`inferforge-gpu inspect`**: validation (exit 2, unchanged), logging on stderr, options → `InspectionOptions`, `--json PATH` (atomic, message on stderr) / `--json -`, text on stdout, `--redact` before output, WARNING lines for a collector that raised and for a missing `nvidia-ml-py`, internal error (5, traceback only with `-vv`, redacted with `--redact`), Ctrl-C (130), precedence 2 → 5 → 4 → readiness → 0; exit 6 removed | `TESTED` | `cli/main.py`, `cli/exit_codes.py` | `integration/test_cli.py` (87): exit codes for every Mode B run and Mode A fixture, precedence, write failures, internal errors (also inside the core), interrupt, warnings, redaction, verbosity, API = CLI JSON, golden text; host test runs the installed console script live | No INFO-level log lines exist yet, so AC60's `-v` behaviour is untested. |
+| DEMO-A | **Live demo** on this WSL2 host: Mode A exit 0 (D04 INFO MEDIUM "no NVIDIA GPU is accessible", no readiness claim), Mode B `--required-vram 8` exit 3 (`DEVICE_PRESENCE_UNKNOWN`), `--redact --json` exit 0 with no user name or home path in the outputs, `--json -` schema-valid, unwritable path exit 4 | `TESTED` (this host only) | — | Manual runs recorded in the sprint report; `integration/test_cli.py::test_console_script_inspects_this_host_live` (`host`) | Not hardware validation; no NVIDIA device on this machine. |
+| DEMO-B | **Synthetic showcase** `examples/synthetic_showcase.py FXnn [inspect options]`: the production CLI over fixture adapters, `data_origin = FIXTURE`, banner, fixture named on stderr; refuses a non-FIXTURE report | `IMPLEMENTED` | `examples/synthetic_showcase.py` | Run for FX06 (B, exit 0), FX07 (B, exit 1), FX09 (B, exit 3), FX03 (B, exit 1), FX02b (A, exit 0) | Repository script, not a CLI option (DEC-17); needs the checkout (the test kit isn't shipped). |
+| S13-DOC | **Documentation**: DEC-50; architecture §4.8–§4.10; data model §8 path placeholder; CLI spec status and exit 6 removed; data flow §1.2; project README rewritten | `IMPLEMENTED` (needs user review) | `docs/*.md`, `README.md` | — | — |
+
+**Open items carried forward (not resolved by this sprint):** KI-36 (graphics processes,
+FR-11), KI-37 (Windows `ProgramFiles` allowlist), KI-38 (wider PCI domains), OQ-11
+(process-name fallback), the UUID/PCI one-to-one correlation policy (L4), owner approval of
+DEC-04/06/07/08 and of DEC-44 to DEC-50, owner review of AC43 and AC09 (schema freeze).
+
+### 1.14 Public-readiness and hardware-validation preparation sprint (2026-11-11)
+
+A completion and quality sprint, not a rewrite: no feature, dependency, lock, schema or
+root-workspace file changed, and no owner decision was taken. Nothing staged or committed.
+**No NVIDIA hardware was available, so no HW item reached `HARDWARE_VALIDATED`.**
+
+| ID | Item | Status | Files | Evidence | Limitations |
+| -- | ---- | ------ | ----- | -------- | ----------- |
+| PR-AUDIT | **Trust audit** of D01–D08 and readiness, independent of the existing tests: over 33 fixture reports (Mode A for all 24 variants, every Mode B run), no READY device without collected free memory ≥ required from a named source, no overall READY without a READY device, no D01 `PASS` unless PyTorch answered `True`, every `FAILED` collector has a collection error, value ⇔ `COLLECTED` everywhere, fixture banner first and last, and no collected UUID, PCI address, policy path or process name in redacted text or JSON | `TESTED` | (throwaway script, not kept) | 0 violations; 19 process-name fields all `<redacted:process>` | Fixture data; the redaction policy covers *collected* literals only (data model §8 rule 1): a `CUDA_VISIBLE_DEVICES` UUID of a device NVML didn't inventory isn't redacted |
+| KI40-FIX | **`--required-vram` below one byte** (e.g. `1e-12`) passed validation, ran a whole inspection, then crashed with exit 5 (`ReadinessResult.required_bytes` must be ≥ 1). Now rejected before inspection: CLI exit 2 with the spec's message; `InspectionOptions` raises `InvalidModelError` | `TESTED` | `cli/main.py`, `models/report.py` | `integration/test_cli.py::test_invalid_required_vram_is_rejected[1e-12, 4.6e-10]`, `unit/test_models.py::test_options_validation_matches_cli_ranges` | CLI spec §2.2 text unchanged ("> 0"); the fix applies its stated intent ("a zero requirement makes readiness meaningless") |
+| HW-TESTS | **Hardware tests** `tests/hardware/test_nvidia_hardware.py`, one per HW-01–HW-13 (testing strategy §6), plus a harness check; real CLI in a child process; preconditions checked at runtime with explicit skip reasons; HW-12's GPU allocation only with `GSI_HW_ALLOW_CUDA_ALLOCATION=1` | `IMPLEMENTED` (NVIDIA branches never run) | `tests/hardware/` | This host: 3 passed (HW-10 no-driver timing, HW-13, harness), 11 skipped with reasons; deselected from the ordinary suite (14). Assertion logic dry-run against fixture reports FX01, FX06, FX10, FX11, FX03 (not evidence) | HW-05 asserts the release (major.minor) for `version.json` candidates and records the full strings (C12); HW-04 checks isolation by "the inspector process never imported torch" |
+| HW-EVIDENCE | **Evidence bundle** `validation/hardware_evidence.py`: real CLI runs (Mode A, redacted, Mode B) with schema checks, independent reference tools (`nvidia-smi`, `nvcc`, `/proc/driver/nvidia/version`, PyTorch child), the hardware tests, a per-feature classification (observed / unavailable / not supported / not implemented / failed), verdict `BLOCKED` or `EVIDENCE_COLLECTED` (never `HARDWARE_VALIDATED`); opt-in `--cuda-smoke-test` recorded separately | `TESTED` (script logic); `BLOCKED` (hardware) | `validation/hardware_evidence.py`, `docs/hardware_validation.md` | `unit/test_hardware_evidence_script.py` (19, one `host`); run on this host: verdict `BLOCKED: no NVIDIA GPU is accessible in this environment`, all three reports schema-valid | Needs a GPU machine (Colab procedure in `docs/hardware_validation.md` §2) |
+| AC42-IT | **No network access**: full live inspection (Mode B, diagnostics, redaction, both renderings) with seven `socket` entry points patched to raise | `TESTED` | `tests/integration/test_no_network.py` (`host`) | Passes; zero attempts | In-process only; children are the AC43 list |
+| PY311 | **Python 3.11** (S1-PY311): uv-managed CPython 3.11.15 installed (uv's interpreter store; the workspace `.venv` and `uv.lock` untouched); wheel installed into a fresh venv outside the repository | `TESTED` (installed wheel) | — | `inferforge-gpu version`/`inspect` exit 0, Mode B exit 3; suite **2691 passed, 28 skipped** (27 docs-reading tests, KI-23, and the repository-only evidence-script module). CPython 3.12.12 isolated run: same counts | Workspace (editable) suite not run on 3.11, to keep the workspace environment on 3.12 |
+| PKG-REVIEW | **Packaging review**: wheel has the 70 package files + metadata only (no tests, examples, docs, validation); `Requires-Dist: nvidia-ml-py>=12.535.108` only; `License-Expression: Apache-2.0`; console script `inferforge-gpu`; secret-pattern scan of the project tree and wheel: 0 hits; no personal data (tests use the synthetic `alice`) | `TESTED` | — | `uv build` into `/tmp`; `scripts/check_release_readiness.py` refuses projects (KI-14/WSD-02), so its secret patterns were applied by hand | **Wheel has no license file** (KI-41); no project URLs, authors or Python-version classifiers; distribution name provisional (OQ-03) |
+| DOCS | **First-run and contributor documentation**: project README rewritten for a first visitor (quickstart with uv and pip, supported versions and platforms, can/cannot establish, examples, distribution and license status); `CONTRIBUTING.md`; `docs/troubleshooting.md`, `docs/demonstration.md` (journeys A–G, recording plan), `docs/roadmap.md`, `docs/good_first_issues.md` (6 checked candidates), `docs/hardware_validation.md`; `examples/reports/` (one redacted live run, three labelled fixture reports) guarded by `unit/test_example_reports.py`; GitHub issue forms `.github/ISSUE_TEMPLATE/gpu-system-inspector-{bug,feature}.yml` (new repository-root files) | `IMPLEMENTED` (needs owner review) | listed | Links and referenced code names checked; templates parse as YAML | — |
+| DOC-FIX | `core/inspector.py` docstring named a nonexistent `COLLECTOR_ORDER` constant; now "a fixed order" | `IMPLEMENTED` | `core/inspector.py` | — | — |
+
+Live journeys on this host (2026-11-11): A inspect exit 0 and `--required-vram 8` exit 3; C
+`--json -` schema-valid `LIVE`; D `--redact --json` exit 0 with no user name or home path in
+text, JSON or stderr; E read-only directory and missing parent both exit 4 with the text
+printed and no file left; F installed wheel outside the repository on 3.11 and 3.12; B
+synthetic FX06 exit 0 (`READY`), FX07 exit 1 (`NOT_READY`), FX09 exit 3 (`UNKNOWN`), FX02b
+exit 0 (D01 `FAIL`); G hardware evidence script `BLOCKED` (no NVIDIA GPU).
+
 ## 2. Requirements tracker
 
-All requirements are specified ([requirements.md](requirements.md)); none is implemented.
+All requirements are specified ([requirements.md](requirements.md)). Statuses below are per requirement; `TESTED` means automated (synthetic and/or this WSL2 host) evidence, never hardware validation.
 
 | ID | Summary | Status |
 | -- | ------- | ------ |
@@ -497,18 +560,18 @@ All requirements are specified ([requirements.md](requirements.md)); none is imp
 | FR-11 | Runtime snapshot | `IN_PROGRESS` (utilization, memory used/free/total/reserved, temperature, slowdown threshold, power draw and limit, and compute processes with PID, type, used memory and name: `TESTED` synthetically for NVML and the `nvidia-smi` fallback, §1.9; **graphics processes aren't collected (KI-36)**, so the requirement isn't met; HW-03 `BLOCKED`) |
 | FR-12 | Provenance and status on every value | `IN_PROGRESS` (every collector emits `Observed` values whose constructor enforces the status vocabulary and `value` ⇔ `COLLECTED`; AC13 `TESTED`, reconciled 2026-11-11; AC14's one-case-per-row mapping test not yet reconciled) |
 | FR-13 | Collector isolation | `IN_PROGRESS` (all ten runs go through the one guard; contained failures `TESTED` for system, PCI, NVML, GPU hardware, runtime, `nvidia-smi`, CUDA environment, PyTorch and correlation, and per-device isolation in GPU hardware and runtime, §1.7–§1.12; AC54 `TESTED`; AC08 waits for the CLI exit code, IMP-C01) |
-| FR-14 | Diagnostics D01–D08 | `PLANNED` |
-| FR-15 | Free-VRAM readiness | `PLANNED` |
-| FR-16 | Text report | `PLANNED` |
-| FR-17 | JSON report + schema | `IN_PROGRESS` (assembled reports validate and round-trip, §1.7; `--json` output in the CLI pending) |
-| FR-18 | `--json PATH` (atomic) / `--json -` | `PLANNED` |
-| FR-19 | Redaction | `PLANNED` |
+| FR-14 | Diagnostics D01–D08 | `TESTED` (synthetic, §1.13; HW-04/HW-09 `BLOCKED`) |
+| FR-15 | Free-VRAM readiness | `TESTED` (synthetic, §1.13; HW-12 `BLOCKED`) |
+| FR-16 | Text report | `TESTED` (§1.13) |
+| FR-17 | JSON report + schema | `IN_PROGRESS` (reports with findings and readiness validate and round-trip; `--json` in the CLI `TESTED`, §1.13; schema `1.0` not frozen, KI-20) |
+| FR-18 | `--json PATH` (atomic) / `--json -` | `TESTED` (§1.13) |
+| FR-19 | Redaction | `TESTED` (§1.13) |
 | FR-20 | `version`, `--help` | `IN_PROGRESS` (bootstrap implemented and tested) |
-| FR-21 | Exit codes | `PLANNED` |
-| FR-22 | `--no-pytorch`, `--no-processes` | `IN_PROGRESS` (`include_pytorch`/`include_processes` honoured by the collectors, §1.9, §1.11; CLI flags need IMP-C01) |
+| FR-21 | Exit codes | `TESTED` (§1.13) |
+| FR-22 | `--no-pytorch`, `--no-processes` | `TESTED` (collectors §1.9, §1.11; CLI flags reach the options, §1.13) |
 | FR-23 | Provisional Python API | `IN_PROGRESS` (`api.inspect(options)` with `pytorch_probe_mode = IN_PROCESS` selects the in-process probe, §1.11; API stability and docs pending, IMP-C06) |
 | FR-24 | Unsupported capabilities & limitations | `PLANNED` |
-| FR-25 | MIG detection | `PLANNED` |
+| FR-25 | MIG detection | `TESTED` (synthetic: `mig_mode`, readiness `MIG_ENABLED_UNSUPPORTED`, `READINESS.MIG`, FX14, §1.13; never on MIG hardware) |
 | NFR-01 … NFR-17 | Cross-platform, degradation, footprint and dependencies, typing, stable JSON, errors, logging, privacy, reproducibility, testability, performance, read-only, extensibility, maintainability, offline, timeouts, documentation | `PLANNED` (all 17) |
 
 ## 3. Architecture tracker
@@ -541,12 +604,12 @@ All requirements are specified ([requirements.md](requirements.md)); none is imp
 
 | ID | Item | Status |
 | -- | ---- | ------ |
-| IMP-C01 | Command tree, options, validation | `IN_PROGRESS`. Command tree and all `inspect` options and validation rules exist and are tested; the options have no effect yet. |
-| IMP-C02 | Exit codes and error handling | `IN_PROGRESS`. `ExitCode` contract, usage errors (2), output error (4, `version`), internal error (5) and interrupt (130) handlers exist; readiness codes are unused until Stage 2+. Temporary code 6 for the placeholder. |
-| IMP-C03 | Output routing, logging configuration | `IN_PROGRESS`. Atomic JSON writer exists (used by `version`); text/JSON report routing and logging configuration not implemented. |
+| IMP-C01 | Command tree, options, validation | `TESTED` (§1.13 C01-C03): every option reaches `InspectionOptions` |
+| IMP-C02 | Exit codes and error handling | `TESTED` (§1.13): 0/1/2/3/4/5/130 and precedence; temporary code 6 removed |
+| IMP-C03 | Output routing, logging configuration | `TESTED` (§1.13): text on stdout, `--json -` alone on stdout, messages and logs on stderr |
 | IMP-C04 | `version` command | `TESTED` |
 | IMP-C05 | Console script `inferforge-gpu` + `python -m gpu_system_inspector` entry | `TESTED` |
-| IMP-C06 | Provisional Python API (`api.inspect()`, `InspectionOptions`) | `TESTED` (§1.7, API: on this WSL2 host; Mode A only) |
+| IMP-C06 | Provisional Python API (`api.inspect()`, `InspectionOptions`) | `TESTED` (§1.7; Mode B and findings since §1.13) |
 
 ### 4.3 Collectors
 
@@ -580,21 +643,21 @@ All requirements are specified ([requirements.md](requirements.md)); none is imp
 
 | ID | Item | Status |
 | -- | ---- | ------ |
-| IMP-D00 | Engine, rule guard, evidence helpers | `PLANNED` |
-| IMP-D01 | D01 PyTorch can't use CUDA | `PLANNED`. Must handle KI-32 (a `PARTIAL` PCI scan isn't proof of absence, row 7) and KI-33 (PCI `NOT_DETECTED`) |
-| IMP-D02 | D02 Free GPU memory vs requirement | `PLANNED` |
-| IMP-D03 | D03 CUDA version landscape | `PLANNED` |
-| IMP-D04 | D04 NVIDIA GPU availability | `PLANNED`. Must handle KI-32 (row 7 on a `PARTIAL` scan) and KI-33 (PCI `NOT_DETECTED` isn't covered by rows 7–8) |
-| IMP-D05 | D05 Dependency availability | `PLANNED` |
-| IMP-D06 | D06 Runtime metrics availability | `PLANNED` |
-| IMP-D07 | D07 Temperature observation | `PLANNED` |
-| IMP-D08 | D08 CUDA device visibility and ordering | `PLANNED` |
+| IMP-D00 | Engine, rule guard, evidence helpers | `TESTED` (§1.13 D00-ENGINE) |
+| IMP-D01 | D01 PyTorch can't use CUDA | `TESTED` (synthetic; KI-32/KI-33 handled, §1.13). Not `HARDWARE_VALIDATED` (HW-04) |
+| IMP-D02 | D02 Free GPU memory vs requirement | `TESTED` (synthetic, §1.13) |
+| IMP-D03 | D03 CUDA version landscape | `TESTED` (synthetic, §1.13) |
+| IMP-D04 | D04 NVIDIA GPU availability | `TESTED` (synthetic and live on this WSL2 host; KI-32/KI-33 handled, §1.13) |
+| IMP-D05 | D05 Dependency availability | `TESTED` (synthetic, §1.13) |
+| IMP-D06 | D06 Runtime metrics availability | `TESTED` (synthetic, §1.13) |
+| IMP-D07 | D07 Temperature observation | `TESTED` (synthetic, §1.13) |
+| IMP-D08 | D08 CUDA device visibility and ordering | `TESTED` (synthetic, §1.13) |
 
 ### 4.6 Readiness
 
 | ID | Item | Status |
 | -- | ---- | ------ |
-| IMP-R01 | Readiness engine (device + overall rules) | `PLANNED`. `NO_NVIDIA_DEVICE` must not be concluded from a `PARTIAL` PCI scan (KI-32); under the architecture §4.9 rule a PCI `NOT_DETECTED` already falls to `DEVICE_PRESENCE_UNKNOWN` (conservative); confirm it when implementing (KI-33) |
+| IMP-R01 | Readiness engine (device + overall rules) | `TESTED` (synthetic, §1.13; KI-32/KI-33 handled: `PARTIAL` and `NOT_DETECTED` scans give `DEVICE_PRESENCE_UNKNOWN`). Not `HARDWARE_VALIDATED` (HW-12) |
 
 ### 4.7 Reporting
 
@@ -602,17 +665,17 @@ All requirements are specified ([requirements.md](requirements.md)); none is imp
 | -- | ---- | ------ |
 | IMP-P01 | Report assembly (limitations, unsupported capabilities) | `TESTED` (§1.7 P01-*): `assemble_report`; one owner per capability (`SYSTEM.*` system, `GPU.PCI_SCAN` PCI, `NVIDIA.ALL` GPU hardware), duplicates rejected; placeholder sections for collectors not yet written |
 | IMP-P02 | JSON serialiser + shipped JSON Schema | `TESTED` (Stage 2; schema `1.0` still a draft until AC09 is `TESTED` over the FX fixtures) |
-| IMP-P03 | Text renderer | `PLANNED` |
-| IMP-P04 | Redaction (incl. logging filter) | `PLANNED`. Includes PCI addresses (class D) in `PciObservation.address`, `PciDeviceFailure.address` and `pci` `CollectionError.message` (S61-FAIL, S63-DEVICE) |
-| IMP-P05 | Atomic writer | `PLANNED` |
+| IMP-P03 | Text renderer | `TESTED` (§1.13 P03-TEXT) |
+| IMP-P04 | Redaction (incl. logging filter) | `TESTED` (§1.13 P04-REDACT): PCI addresses in `PciObservation.address` and inside `CollectionError.message` included. No separate logging filter: log lines carry no sensitive values |
+| IMP-P05 | Atomic writer | `TESTED` (§1.13 P05-WRITER) |
 
 ### 4.8 Demonstration
 
 | ID | Item | Status | Notes |
 | -- | ---- | ------ | ----- |
-| DEMO-01 | Live run on the WSL2 dev machine (no-GPU path) recorded in README | `NOT_STARTED` | After implementation; real `LIVE` output |
+| DEMO-01 | Live run on the WSL2 dev machine (no-GPU path) recorded in README | `TESTED` | §1.13 DEMO-A; real `LIVE` excerpt in the README. User confirmation (MAN) pending |
 | DEMO-02 | Live run on an NVIDIA machine (Mode A + Mode B) | `BLOCKED` | Needs hardware (§13) |
-| DEMO-03 | Illustrative report excerpts in docs | `NOT_STARTED` | Documentation only, never a product mode (DEC-17). Must be labelled "illustrative, not a real measurement" and carry `data_origin = FIXTURE`. |
+| DEMO-03 | Illustrative report excerpts in docs | `IMPLEMENTED` | §1.13 DEMO-B: `examples/synthetic_showcase.py`, a repository script (never a product mode, DEC-17), `data_origin = FIXTURE`, fixture banner, fixture named on stderr. |
 
 ### 4.9 Final review
 
@@ -642,12 +705,16 @@ All requirements are specified ([requirements.md](requirements.md)); none is imp
 | TST-12 | Integration: JSON Schema validation and determinism | `TESTED` for all 30 synthetic fixture report cases (S3-SCHEMA, S3-RT). Reports assembled by the production core over all 24 fixtures, and the live host report, also validate, round-trip and are deterministic (§1.7). |
 | TST-13 | Integration: PyTorch probe protocol with stub `torch` | `PLANNED` |
 | TST-14 | Invariant tests (testing strategy §7) | `IN_PROGRESS` (value/status invariant, no-zero, NaN rejection, schema validity and determinism tested on builder reports and all fixture reports; provenance invariant added; banner and redaction invariants pending) |
+| TST-16 | Hardware tests HW-01–HW-13 (`tests/hardware/`, marker `hardware`) and the evidence bundle | `IMPLEMENTED` (§1.14); on this WSL2 host 3 passed, 11 skipped with reasons; NVIDIA branches never run on hardware |
 | TST-15 | Coverage and quality gates | `IN_PROGRESS`: coverage measured and enforced (S3-COV; 96.63% ≥ 92% after the integration milestone, K-QG); ruff, `check_dependencies` run every stage. Type checking not configured (OQ-08). |
 
 ## 6. Hardware validation tracker
 
 Results are recorded here with date, machine, OS, driver, GPU, PyTorch version and outcome.
-**No hardware validation has been performed.**
+**No NVIDIA hardware validation has been performed.** Since §1.14 every HW item has a test in
+`tests/hardware/test_nvidia_hardware.py`, and [hardware_validation.md](hardware_validation.md)
+describes how to run them (with `validation/hardware_evidence.py`) on Colab or native Linux
+and what to send back.
 
 | ID | Test | Status | Notes |
 | -- | ---- | ------ | ----- |
@@ -660,10 +727,10 @@ Results are recorded here with date, machine, OS, driver, GPU, PyTorch version a
 | HW-07 | WSL2 with NVIDIA driver | `BLOCKED` | Dev machine is WSL2 but has no NVIDIA driver exposed |
 | HW-08 | Windows WDDM | `BLOCKED` | |
 | HW-09 | Multi-GPU ordering | `BLOCKED` | |
-| HW-10 | Performance measurements | `PLANNED` | Partially possible on dev machine (no-GPU path) after implementation |
+| HW-10 | Performance measurements | `IN_PROGRESS` | No-driver path measured on this WSL2 machine 2026-11-11: `inspect --no-pytorch` median of 3 runs below the NFR-11 2 s target (HW-10 test passed; times in the evidence bundle's `hardware-tests.xml`). NVML path (< 3 s, ≤ 8 GPUs) `BLOCKED` |
 | HW-11 | macOS | `BLOCKED` | No macOS machine identified |
 | HW-12 | Readiness on real memory pressure | `BLOCKED` | |
-| HW-13 | No-GPU real-machine run | `PLANNED` | Can run on the WSL2 dev machine once implemented |
+| HW-13 | No-GPU real-machine run | `TESTED` | Passed 2026-11-11 on the WSL2 dev machine (Ubuntu 22.04.5, kernel 5.15.167.4-microsoft-standard-WSL2, no NVIDIA driver exposed, CPython 3.12.12): Mode A exit 0, D04 `INFO`, Mode B not `READY` (exit 3), no traceback (§1.14). Validates graceful degradation on a real machine, not GPU behaviour |
 
 ## 7. Documentation tracker
 
@@ -683,14 +750,18 @@ reviewed yet.
 | DOC-05 | [data_flow.md](data_flow.md) | `USER_VERIFIED` | Stage 4: §3 outcome contract and `AdapterUsageError`; §4 lifecycle rows (failed init, single session, handles, close semantics); §5 probe protocol v1 types and decoding. Stage 5: §1.1 step ① (system collection and environment) in detail. Stage 5.1: §1.1 classification and profile derivation. Stage 6.2: §1 step ② native-Linux eligibility. Stage 6.3: §3 run-status kinds (field-level, omitted device, whole capability) and the `ErrorDetail` fallback argument. Stage 6.6: §1 step ② names `PciCollector` and the IMP-K02 merge. Integration milestone: §1 (core implemented, ③ fallback), new §1.2 (what runs today), §3 guard as implemented. NVIDIA adapters: §1.2 (real NVML/`nvidia-smi`), §4 (production adapter evidence). **Needs review.** |
 | DOC-06 | [existing_tools_analysis.md](existing_tools_analysis.md) | `USER_VERIFIED` | — |
 | DOC-07 | [data_model_specification.md](data_model_specification.md) | `USER_VERIFIED` | Python-floor sentence updated to 3.11. Stage 2: new §10 "Implementation clarifications" (12 items, including the `NOT_APPLICABLE`/`error` inconsistency resolution). Stage 3: §3.2 `error` row rewritten with an explanation of why `NOT_APPLICABLE` needs a note but not an error; §1 natural device ordering; §10 #1, #4, #9 updated. Stage 4: §3.3 row "any other `OSError` → `COLLECTION_FAILED`" plus a note that `adapters/outcomes.py` implements the table. Stage 5: §4.1 sources updated (Windows CPU from the registry instead of `platform.processor()`; macOS processor/total memory deferred; `is_wsl` without `WSL_DISTRO_NAME`; memory meaning notes). Stage 5.1: macOS rows restored to the approved requirement (`sysctlbyname`); `is_wsl` replaced by `linux_environment` with a normative classification rule; `platform_profile` note; §7.3 draft-change log. Stage 6.1: `NO_DRIVER_BOUND` (§3.2, §4.2). Stage 6.2: `LINUX_ENVIRONMENT_UNKNOWN` (§3.2, §3.3), `GPU.PCI_SCAN`/`NVIDIA.ALL` policy (§3.4), §4.2 eligibility wording, §7.5 example wording. Stage 6.6: §4.2 `pci_observations` (missing root, omitted devices → `pci` errors). Integration milestone: §3.2 `FALLBACK_FIELD_UNAVAILABLE` and `NOT_IMPLEMENTED`; §9 guard fallback keeps PCI, placeholder sections. NVIDIA adapters: §3.2 code list, §3.3 `nvidia-smi` rows (`[Unknown Error]`/`[GPU is lost]`, unknown query field). **Needs review.** |
-| DOC-08 | [cli_specification.md](cli_specification.md) | `USER_VERIFIED` | Temporary exit code 6 `NOT_IMPLEMENTED` (development only); argparse message format note; `version --json PATH` messages; status line. |
+| DOC-08 | [cli_specification.md](cli_specification.md) | `USER_VERIFIED` | Temporary exit code 6 `NOT_IMPLEMENTED` (development only; removed 2026-11-11 with the `inspect` implementation, DEC-50); argparse message format note; `version --json PATH` messages; status line. |
 | DOC-09 | [diagnostics_specification.md](diagnostics_specification.md) | `USER_VERIFIED` | Stage 3: §2 severity table corrected (`INFO` may be `LOW`, matching D08) and made normative as a status/severity table; D05 severity note. **Needs review.** |
 | DOC-10 | [testing_strategy.md](testing_strategy.md) | `USER_VERIFIED` | Stage 3: §2 coverage command, test kit layout and provenance rule; §4 implementation note (FX14 assumption); §5 fakes as implemented; §8 coverage baseline and target. Stage 4: §5 rewritten (fake ↔ protocol table, conformance tests, what a fake can't prove); §8 Stage 4 coverage. Stage 5: §2 `host` marker; §5 `FakeHostApi` and the system inspection test table; §8 Stage 5 coverage. Stage 5.1: §5 WSL matrix, parity guard, simulated `sysctlbyname`; §8 Stage 5.1 coverage. Stage 6.2: §3.1 PCI row (dict fake, WSL1/UNKNOWN, policy tests), §5 PCI gating wording, §6 HW-02 precondition. Stage 6.6: §5 `pci` fake collector, `sysfs_reader_for`, PCI collector/parity/host test modules, host note; §8 Stage 6 coverage. Integration milestone: §4 note (FX13 correction, FX10/KI-34), §5 `FakeCollector` conforming, four new test modules, demo; §8 coverage. NVIDIA adapters: §3.1 runner/NVML/`nvidia-smi` rows, §5 new test modules and host note, "what a fake can't prove" updated, §8 coverage. **Needs review.** |
 | DOC-11 | [acceptance_criteria.md](acceptance_criteria.md) | `USER_VERIFIED` | — |
 | DOC-12 | app_tracker.md (this file) | `IMPLEMENTED` | Living status document; not subject to approval. |
 | DOC-13 | [technical_evidence.md](technical_evidence.md) | `USER_VERIFIED` | OBS-07, OBS-08 added. |
 | DOC-14 | [../README.md](../README.md) | `IMPLEMENTED` | Rewritten for Stage 1 status and current development usage after the approval. Needs review. |
-| DOC-15 | User-facing usage docs / examples | `NOT_STARTED` | After implementation |
+| DOC-15 | User-facing usage docs / examples | `IMPLEMENTED` | §1.14: README quickstart, [troubleshooting.md](troubleshooting.md), [demonstration.md](demonstration.md), `examples/reports/`. Needs review. |
+| DOC-18 | [hardware_validation.md](hardware_validation.md) | `IMPLEMENTED` | §1.14 procedure; §0 Colab notebook workflow added 2026-11-12. No NVIDIA hardware result. Needs review. |
+| DOC-21 | [../notebooks/inferforge_nvidia_gpu_validation.ipynb](../notebooks/inferforge_nvidia_gpu_validation.ipynb) | `IMPLEMENTED` | Reusable Colab notebook (2026-11-12): uses production CLI, `pytest -m hardware` and `validation/hardware_evidence.py`. Not executed on NVIDIA hardware. Live "Open in Colab" badge awaits a published branch (`origin/main` lacks Project 01). Needs review. |
+| DOC-19 | [roadmap.md](roadmap.md), [good_first_issues.md](good_first_issues.md) | `IMPLEMENTED` | §1.14. Reader views of this tracker; this tracker wins on any conflict. Needs review. |
+| DOC-20 | [../CONTRIBUTING.md](../CONTRIBUTING.md), GitHub issue forms (`.github/ISSUE_TEMPLATE/gpu-system-inspector-*.yml`) | `IMPLEMENTED` | §1.14. Needs review. |
 | DOC-16 | `docs/component-reuse-map.md` candidates | `NOT_STARTED` | Only after code exists (package policy) |
 | DOC-17 | [../../../docs/python-version-review.md](../../../docs/python-version-review.md) (workspace-level, WSD-01) | `IMPLEMENTED` | Decision approved (3.11). Status and application record (§9) added in Stage 1. |
 
@@ -713,70 +784,70 @@ reviewed yet.
 
 ## 8. Acceptance checklist
 
-No criterion is met yet. "Target status" is the highest status the criterion needs.
+"Target status" is the highest status the criterion needs; a criterion is met when its current status reaches the target.
 
 | # | Criterion (short) | Methods | Current | Target |
 | -- | ----------------- | ------- | ------- | ------ |
-| AC01 | Runs without NVIDIA GPU | IT, HW-13, MAN | `PLANNED` | `USER_VERIFIED` |
-| AC02 | Missing NVML doesn't crash | IT | `IN_PROGRESS` (missing binding, missing library and driver not loaded handled by the production NVML adapter and pipeline, incl. live on this host, §1.8; the driver section since IMP-K03, §1.9; the CUDA and PyTorch sections need IMP-K05, K06) | `TESTED` |
-| AC03 | Missing PyTorch doesn't crash | IT | `IN_PROGRESS` (FX05 through the `Inspector`: `NOT_INSTALLED`, no probe process (runner call log), §1.11; exit code and D01/D05 need IMP-C01, IMP-D*) | `TESTED` |
-| AC04 | Driver CUDA ≠ Toolkit label | UT, IT, REV | `IN_PROGRESS` (separate fields and enforced note; toolkit versions only from `version.json`/`nvcc`, tested for every fixture, §1.10; text label pending, IMP-P03) | `TESTED` |
+| AC01 | Runs without NVIDIA GPU | IT, HW-13, MAN | `TESTED` (§1.13: FX03, FX04b, FX13 exit 0 through the CLI with D04 `INFO`; live on this WSL2 host exit 0, no traceback. Target `USER_VERIFIED` needs the user's manual check (MAN)) | `USER_VERIFIED` |
+| AC02 | Missing NVML doesn't crash | IT | `TESTED` (FX04a, FX04b, FX17 through the CLI exit 0 with complete reports (§1.13); adapters and sections §1.8–§1.11; live on this host) | `TESTED` |
+| AC03 | Missing PyTorch doesn't crash | IT | `TESTED` (FX05: exit 0 through the CLI, `NOT_INSTALLED`, no probe process (§1.11), D01 `NOT_APPLICABLE`, D05 `INFO` (§1.13)) | `TESTED` |
+| AC04 | Driver CUDA ≠ Toolkit label | UT, IT, REV | `IN_PROGRESS` (separate fields and notes; text labels "Driver supports CUDA up to", "CUDA Toolkit … (nvcc)", "PyTorch built with CUDA" `TESTED` (§1.13); REV by the owner pending) | `TESTED` |
 | AC05 | Memory metrics keep source and meaning | UT, IT | `TESTED` (reconciled 2026-11-11: device memory only in `runtime[*]`/`gpu.devices[*].memory_total_bytes` with NVML or `NVIDIA_SMI` source and exact method, FX01 and FX04a whole-section parity through the `Inspector` (`integration/test_inspector.py`); allocator data only in `frameworks.pytorch.allocator` (`unit/test_framework_collector.py`); `memory_bus_utilization_percent` is its own field and method; the fallback's 1 MiB note, FX04a and `unit/test_nvidia_smi_adapter.py`) | `TESTED` |
 | AC06 | Multiple devices independent | IT | `PLANNED` | `TESTED` (+ HW-09) |
-| AC07 | Readiness vs threshold | UT, IT | `PLANNED` | `TESTED` (+ HW-12) |
-| AC08 | Failed collector isolated | IT, UT | `IN_PROGRESS` (UT: guard; IT: system, PCI, NVML, GPU-hardware, runtime, `nvidia-smi`, CUDA environment (FX10's injected crash) and PyTorch failures stay contained, §1.7–§1.11; exit-code behaviour needs IMP-C01) | `TESTED` |
+| AC07 | Readiness vs threshold | UT, IT | `TESTED` (all 9 Mode B runs: required bytes, per-device status and margins, aggregation per architecture §4.9 (§1.13)) | `TESTED` (+ HW-12) |
+| AC08 | Failed collector isolated | IT, UT | `TESTED` (FX10 through the CLI exit 0 with the WARNING line; `cuda_environment` and `nvml:1` failures contained (§1.7–§1.11, §1.13)) | `TESTED` |
 | AC09 | Versioned JSON schema | IT, REV | `IN_PROGRESS` (schema shipped; all 30 synthetic fixture report cases validate and round-trip; reports produced by the real pipeline over all 24 fixtures and live on this host validate too, §1.7. Not complete: the remaining sections' collectors and the freeze decision, KI-20) | `TESTED` |
-| AC10 | Findings have evidence & limitations | UT, IT | `PLANNED` | `TESTED` |
+| AC10 | Findings have evidence & limitations | UT, IT | `TESTED` (`integration/test_diagnostics_golden.py::test_wording_rules` over every finding of all 30 report cases; the model enforces the rest (§1.13)) | `TESTED` |
 | AC11 | Hardware tests separate | IT, REV | `PLANNED` | `TESTED` |
-| AC12 | Mocked never presented as real | UT, IT, REV | `PLANNED` | `TESTED` |
+| AC12 | Mocked never presented as real | UT, IT, REV | `IN_PROGRESS` (fixture reports `FIXTURE` with the banner first and last, live CLI reports `LIVE` (host test), the CLI has no option that produces `FIXTURE`; the synthetic showcase is a repository script (§1.13); REV pending) | `TESTED` |
 | AC13 | No misleading zeros | UT, IT | `TESTED` (reconciled 2026-11-11: UT `unit/test_observed.py` (the constructor rejects every violation); IT: every fixture's report is built by the production pipeline (`integration/test_inspector.py`, 24 fixtures), so every value passed that check, `integration/test_partial_failure_multi_gpu.py::test_missing_runtime_metrics_serialise_as_null_not_zero`, and the adapters map `[N/A]`/`None` to statuses, never values; the post-IMP-K07 review checked all 1,764 observed values of the 24 reports, no violation) | `TESTED` |
 | AC14 | Error→status mapping | UT | `PLANNED` | `TESTED` |
-| AC15 | Installed-but-broken PyTorch | IT | `IN_PROGRESS` (FX15 `COLLECTION_FAILED`/`IMPORT_ERROR` with the message vs FX05 `NOT_INSTALLED`, §1.11; D01 `FAIL` needs IMP-D01) | `TESTED` |
+| AC15 | Installed-but-broken PyTorch | IT | `TESTED` (FX15 `COLLECTION_FAILED`/`IMPORT_ERROR` with the message vs FX05 `NOT_INSTALLED`, §1.11; D01 `FAIL` HIGH for FX15, §1.13) | `TESTED` |
 | AC16 | Allocator stats `NOT_APPLICABLE` in CLI | UT, IT | `IN_PROGRESS` (subprocess probe `NOT_APPLICABLE` with the note; in-process with CUDA initialised (stubbed) `COLLECTED` with "Calling process only", §1.11; "via CLI" needs IMP-C01) | `TESTED` |
 | AC17 | Toolkit detection | UT, HW-05 | `IN_PROGRESS` (`root_path`, `discovered_via`, version `method`; mismatched candidates all listed; none → `NOT_DETECTED`: `TESTED` synthetically, §1.10; HW-05 not run) | `HARDWARE_VALIDATED` |
-| AC18 | PyTorch build CUDA labelled | UT, IT | `IN_PROGRESS` (enforced note, CPU-only `NOT_APPLICABLE`, both reproduced by the collector for FX01/FX02a, §1.11; text label needs IMP-P03) | `TESTED` |
+| AC18 | PyTorch build CUDA labelled | UT, IT | `TESTED` (enforced note, CPU-only `NOT_APPLICABLE` (§1.11); text label "PyTorch built with CUDA" (§1.13)) | `TESTED` |
 | AC19 | UUID/PCI correlation | UT, IT, HW-09 | `IN_PROGRESS` (FX06 `cuda:0` → `nvml:1`, `cuda:1` → `nvml:0` by UUID through the `Inspector`; PCI fallback, `NOT_DETECTED` for no match, `NOT_APPLICABLE` without an NVML inventory (FX04a): `TESTED` synthetically, §1.12; HW-09 not run) | `HARDWARE_VALIDATED` |
-| AC20 | NOT_READY + exit 1 | IT | `PLANNED` | `TESTED` |
-| AC21 | UNKNOWN + exit 3 | IT | `PLANNED` | `TESTED` |
-| AC22 | Units and boundary | UT, IT | `PLANNED` | `TESTED` |
-| AC23 | Readiness disclaimer | UT, IT | `PLANNED` | `TESTED` |
-| AC24 | `--required-vram` validation | UT | `PLANNED` | `TESTED` |
+| AC20 | NOT_READY + exit 1 | IT | `TESTED` (FX07 (B) through the CLI: `NOT_READY`/`NO_DEVICE_READY`, negative margins, D02 `FAIL`, exit 1 (§1.13)) | `TESTED` |
+| AC21 | UNKNOWN + exit 3 | IT | `TESTED` (FX04b (B), FX09 (B), FX14 (B) through the CLI: `UNKNOWN` with the §4.1 reasons, D02 `UNKNOWN`, exit 3 (§1.13)) | `TESTED` |
+| AC22 | Units and boundary | UT, IT | `TESTED` (`unit/test_models.py` (8 and 7.5 GiB); FX19 boundary `free == required` → `READY`; FX06 `nvml:0` `INSUFFICIENT_TOTAL_MEMORY` (§1.13)) | `TESTED` |
+| AC23 | Readiness disclaimer | UT, IT | `TESTED` (disclaimer equals the fixed text in every Mode B run; the text READINESS section ends with it; wording rule over D02 and readiness (§1.13)) | `TESTED` |
+| AC24 | `--required-vram` validation | UT | `TESTED` (Stage 1 validation tests; validation runs before any inspection; §1.14 KI-40: values that round to 0 bytes now rejected with exit 2 instead of exit 5 after inspection) | `TESTED` |
 | AC25 | Deterministic JSON | IT | `TESTED` (reconciled 2026-11-11: `integration/test_inspector.py::test_every_report_is_valid_complete_and_deterministic` renders every fixture's production report twice, byte-identical, schema-valid and round-tripping; key order, completeness and no NaN/Infinity from `unit/test_serialization.py` and the `Observed` checks; the report records schema and application versions, `nvidia-ml-py` (`driver.nvml_binding`) and PyTorch versions when present, options, collector durations and `data_origin`) | `TESTED` |
-| AC26 | stdout/stderr separation | IT | `PLANNED` | `TESTED` |
-| AC27 | Atomic `--json PATH` | IT | `PLANNED` | `TESTED` |
-| AC28 | Evidence classification & wording | UT, IT | `PLANNED` | `TESTED` |
-| AC29 | D01 | UT, IT, HW-04 | `PLANNED` | `HARDWARE_VALIDATED` |
-| AC30 | D03 | UT, IT | `PLANNED` | `TESTED` |
-| AC31 | D04 | IT | `PLANNED` | `TESTED` |
-| AC32 | D05, no auto-install | IT, UT | `PLANNED` | `TESTED` |
-| AC33 | D06 | IT | `PLANNED` | `TESTED` |
-| AC34 | D07, no throttling inference | UT, IT | `PLANNED` | `TESTED` |
-| AC35 | D08 | IT, HW-09 | `PLANNED` | `HARDWARE_VALIDATED` |
+| AC26 | stdout/stderr separation | IT | `TESTED` (`--json -` parses at `-vv` with logs on stderr; text-only stdout; section order; missing values as status and reason; golden text FX01, FX03, FX07, FX13 (§1.13)) | `TESTED` |
+| AC27 | Atomic `--json PATH` | IT | `TESTED` (file equals the `--json -` output; stderr message; exit follows readiness; missing parent, directory and read-only directory → exit 4, text still printed, no target or temp file (§1.13)) | `TESTED` |
+| AC28 | Evidence classification & wording | UT, IT | `TESTED` (evidence kinds; every observation pointer resolves in the JSON; causal wording only at HIGH; URL allowlist (§1.13)) | `TESTED` |
+| AC29 | D01 | UT, IT, HW-04 | `TESTED` (FX02a–d, FX15, FX16 matched exactly, FX02b forward-compatibility limitation, FX02d warning quoted (§1.13); HW-04 `BLOCKED`) | `HARDWARE_VALIDATED` |
+| AC30 | D03 | UT, IT | `TESTED` (legend whenever a version is collected; FX08 `INFO`; FX01 same-major `INFO` (§1.13)) | `TESTED` |
+| AC31 | D04 | IT | `TESTED` (FX03 INFO HIGH, FX04b INFO MEDIUM with the "can't be confirmed" limitation, FX13 INFO, FX17 FAIL HIGH with `kernel_driver` evidence (§1.13)) | `TESTED` |
+| AC32 | D05, no auto-install | IT, UT | `TESTED` (FX04a WARNING with the reinstall recommendation, FX05 INFO with the selector link, FX20 INFO; no installer in any fixture's command log (§1.13)) | `TESTED` |
+| AC33 | D06 | IT | `TESTED` (FX09 WARNING; FX10 `nvml:1` FAIL, `nvml:0` PASS; FX11/FX12 INFO with the platform reason (§1.13)) | `TESTED` |
+| AC34 | D07, no throttling inference | UT, IT | `TESTED` (FX01 INFO with value and threshold, FX18 WARNING wording, limitation always present, forbidden phrases absent (§1.13)) | `TESTED` |
+| AC35 | D08 | IT, HW-09 | `TESTED` (FX02c WARNING, FX06 INFO with the index mapping (§1.13); HW-09 `BLOCKED`) | `HARDWARE_VALIDATED` |
 | AC36 | macOS | IT, HW-11 | `PLANNED` | `HARDWARE_VALIDATED` |
 | AC37 | Windows WDDM | IT, HW-08 | `PLANNED` | `HARDWARE_VALIDATED` |
 | AC38 | WSL2 | IT, HW-07, MAN | `PLANNED` | `USER_VERIFIED` |
-| AC39 | MIG | IT | `PLANNED` | `TESTED` |
-| AC40 | Redaction | IT | `PLANNED` | `TESTED` |
+| AC39 | MIG | IT | `TESTED` (FX14: `mig_mode = ENABLED`, readiness `UNKNOWN`/`MIG_ENABLED_UNSUPPORTED`, `READINESS.MIG` emitted by the GPU hardware collector (§1.13, DEC-50 (8))) | `TESTED` |
+| AC40 | Redaction | IT | `TESTED` (no sensitive literal in JSON, text or stderr with `--redact`, including inside PyTorch warnings and error messages; consistent ordinals across device, PyTorch and findings; `redaction.applied` with categories; unchanged without `--redact` (§1.13)) | `TESTED` |
 | AC41 | Privacy defaults | UT, REV | `PLANNED` | `TESTED` |
-| AC42 | No network | IT | `PLANNED` | `TESTED` |
+| AC42 | No network | IT | `TESTED` (§1.14: `integration/test_no_network.py`, a full live inspection with Mode B, diagnostics, redaction and both renderings, seven `socket` entry points patched to raise: zero attempts; in-process, child processes are the AC43 list) | `TESTED` |
 | AC43 | Read-only | UT, REV | `IN_PROGRESS` (UT: the NVML adapter calls only `NVML_READ_ONLY_FUNCTIONS` (`unit/test_nvml_adapter.py`); only `adapters/commands.py` may start processes (`unit/test_boundaries.py`), never through a shell; the processes an inspection may start are `nvidia-smi` (header; `--query-gpu` only as the fallback), `nvcc --version` (the active `nvcc` and toolkits without `version.json`) and the PyTorch probe child (`sys.executable -m gpu_system_inspector.adapters._torch_probe_main`, or none in `IN_PROCESS` mode), §1.8–§1.11; the review grep for `nvmlDeviceSet`, `nvmlDeviceReset`, `nvmlDeviceClear`, `os.kill`, `signal` found nothing in `src/` (2026-11-11); REV by the owner and the `--json` writer (IMP-P05) pending) | `TESTED` |
 | AC44 | Timeouts | UT, IT | `PLANNED` | `TESTED` |
 | AC45 | `version` command | IT | `IN_PROGRESS` (bootstrap tests pass; criterion not signed off) | `TESTED` |
-| AC46 | Help | IT | `IN_PROGRESS` (bootstrap tests pass; `inspect` help describes a placeholder) | `TESTED` |
-| AC47 | Exit codes | IT | `PLANNED` | `TESTED` |
-| AC48 | Internal error handling | IT | `PLANNED` | `TESTED` |
-| AC49 | Performance measured | HW-10, MAN | `PLANNED` | `HARDWARE_VALIDATED` |
+| AC46 | Help | IT | `TESTED` (all three help levels exit 0; the `inspect` help lists the options and the exit-status table, no placeholder text (§1.13)) | `TESTED` |
+| AC47 | Exit codes | IT | `TESTED` (0, 1, 2, 3, 4, 5, 130 and the precedence 4 over readiness produced by tests (§1.13)) | `TESTED` |
+| AC48 | Internal error handling | IT | `TESTED` (exception injected in the core: exit 5, nothing on stdout, one line on stderr, traceback only with `-vv`; Ctrl-C exit 130 (§1.13)) | `TESTED` |
+| AC49 | Performance measured | HW-10, MAN | `IN_PROGRESS` (no-driver path measured below 2 s on this WSL2 host, §1.14; NVML path needs hardware) | `HARDWARE_VALIDATED` |
 | AC50 | Dependency classes & footprint | REV, IT | `IN_PROGRESS` (metadata tests pass; `nvidia-ml-py` floor confirmed at the binding level, KI-16/OQ-07 resolved, §1.9) | `TESTED` |
 | AC51 | Workspace, lint, typing, coverage | REV, automated | `PLANNED` | `TESTED` |
 | AC52 | Matches NVIDIA tools on real HW | HW-01, HW-03, HW-04 | `PLANNED` | `HARDWARE_VALIDATED` |
-| AC53 | Documentation complete & consistent | REV, MAN | `IN_PROGRESS` (specification approved; README usage for `inspect` pending implementation) | `USER_VERIFIED` |
+| AC53 | Documentation complete & consistent | REV, MAN | `IN_PROGRESS` (specification approved; README usage, troubleshooting, contributing, demonstration and hardware-validation docs written in §1.14; owner review pending) | `USER_VERIFIED` |
 | AC54 | Per-device failure isolation | IT | `TESTED` (reconciled 2026-11-11: FX10 through the `Inspector`: `nvml:0` runtime fully `COLLECTED`, `nvml:1` `COLLECTION_FAILED` with `NVML_ERROR_GPU_IS_LOST`, one `CollectionError` with `device_ref = nvml:1` (`integration/test_inspector.py`, `unit/test_device_loss.py`); synthetic only, real device loss is HW-01, `BLOCKED`) | `TESTED` |
 | AC55 | Unsupported capabilities & limitations | IT | `PLANNED` | `TESTED` |
 | AC56 | `nvidia-smi` fallback | UT, IT | `PLANNED` | `TESTED` (+ HW-01) |
 | AC57 | Linux PCI check | UT, IT, HW-02 | `IN_PROGRESS` (UT: adapter, eligibility-policy and PCI collector tests pass; IT: FX03/FX17 parity at adapter, collector and full-inspection level passes (S64-*, §1.7); HW-02 `BLOCKED`) | `HARDWARE_VALIDATED` |
-| AC58 | Python API | IT | `PLANNED` | `TESTED` |
-| AC59 | Opt-outs | IT | `IN_PROGRESS` (`include_processes=False` → `SKIPPED` with no process NVML call, §1.9; `include_pytorch=False` → `SKIPPED`, nothing read or run, §1.11; the CLI flags need IMP-C01) | `TESTED` |
-| AC60 | Verbosity | IT | `PLANNED` | `TESTED` |
+| AC58 | Python API | IT | `TESTED` (the `Inspector` report for FX06 (B) equals the CLI's JSON; `api.inspect` is the same `Inspector` over the production adapters (§1.13)) | `TESTED` |
+| AC59 | Opt-outs | IT | `TESTED` (collectors §1.9, §1.11; the CLI flags reach `InspectionOptions` (§1.13)) | `TESTED` |
+| AC60 | Verbosity | IT | `IN_PROGRESS` (levels configured on stderr and report content identical across verbosity (§1.13); no INFO-level log line exists yet, so `-v` isn't observable) | `TESTED` |
 
 ## 9. Known issues and limitations
 
@@ -794,9 +865,9 @@ No criterion is met yet. "Target status" is the highest status the criterion nee
 | KI-10 | Product limitations: point-in-time snapshot, single host, MIG instances not enumerated, Jetson/iGPU unsupported, NVIDIA only. | Documented to users. | Product spec §4, §6. |
 | KI-11 | PyTorch is inspected only in the interpreter running the inspector (DEC-07, DEC-26). | The inspector must be installed in each ML environment to inspect its PyTorch, so the Python floor limits which environments qualify. | Documented in product spec §1.1, D05 wording and the CLI help; `--python` deferred (§14). |
 | KI-12 | ~~`verify_isolated_install.py` venv interpreter not deterministic.~~ | — | **Resolved in Stage 1:** `--python` defaults to the running interpreter; slow tests pass. |
-| KI-13 | No Python 3.11 interpreter is installed on the development machine (OBS-04). | The `>=3.11` floor is declared but not directly tested on 3.11. | S1-PY311 `BLOCKED`; needs approval to run `uv python install 3.11`. |
+| KI-13 | ~~No Python 3.11 interpreter is installed on the development machine (OBS-04).~~ **Resolved 2026-11-11** (§1.14): uv-managed CPython 3.11.15 installed; the wheel, installed outside the repository, passes the suite on 3.11 (2691 passed, 28 skipped). | — | The editable workspace suite still runs on 3.12 only. |
 | KI-14 | `scripts/verify_isolated_install.py` only accepts packages (by design, enforced by `test_projects_are_rejected`). | The isolated-install check for Project 01 had to be run manually (S1-ISO). | Possible workspace change: an explicit `--allow-project` option. Not made, because it changes repository policy; awaiting a decision. |
-| KI-15 | `inspect` is a placeholder returning temporary exit code 6. | Scripts must not treat Stage 1 builds as able to inspect. | Removed when `inspect` is implemented (cli spec §6). |
+| KI-15 | ~~`inspect` is a placeholder returning temporary exit code 6.~~ **Resolved 2026-11-11** (§1.13, DEC-50): `inspect` is implemented and exit code 6 removed. | — | — |
 | KI-16 | ~~The `nvidia-ml-py>=12.535.108` floor is provisional (OQ-07).~~ **Resolved 2026-11-11** (§1.9, DEC-46): the floor is kept. With `nvidia-ml-py==12.535.108` installed in a throwaway environment, every call the adapter needs is present (the only missing preferred call, `nvmlDeviceGetTemperatureV`, falls back to `nvmlDeviceGetTemperature`), and the NVML adapter, driver, runtime, device-loss and production pipeline suites pass (212 tests); `unit/test_nvml_adapter.py::test_the_installed_binding_has_every_call_the_adapter_needs` keeps checking it. | — | Binding-level only: behaviour against a live driver is HW-01. |
 | KI-17 | ~~No coverage tool is configured.~~ **Resolved in Stage 3** (S3-COV): `pytest-cov` test-only, `fail_under = 92`. | — | — |
 | KI-18 | ~~Spec inconsistency on `error` for `NOT_APPLICABLE`.~~ **Resolved in Stage 3:** data model §3.2 now says `note` required, `error` optional. | — | User review of the amendment (DOC-07). |
@@ -813,14 +884,16 @@ No criterion is met yet. "Target status" is the highest status the criterion nee
 | KI-29 | ~~`/proc/version` containing `microsoft` is reported as `WSL2`, including WSL1.~~ **Resolved in Stage 5.1** (S51-WSLPOLICY): conservative `linux_environment` classification; WSL1 and ambiguous markers are no longer `WSL2` (DEC-39). | — | Native Linux and WSL1 validated synthetically only. |
 | KI-25 | ~~Lifecycle and outcome mapping are proven on fakes only.~~ **Partly resolved (IMP-A01):** the production adapter is tested against a stub `pynvml` whose error codes and messages are checked against the real binding, and the real binding ran on this host (library not found). | An NVIDIA driver could still behave in ways a stub can't show. | Validate on hardware (HW-01…). |
 | KI-23 | Spec-table tests read `docs/`, which isn't in the wheel. | 25 tests skip in isolated installs (with a reason). | Intended: the wheel stays docs-free; the workspace run covers them. |
-| KI-32 | A `PARTIAL` PCI scan (some listed devices couldn't be observed) still has `pci_observations` `COLLECTED` (DEC-43). D04 row 7, D01 row 7 and the readiness `NO_NVIDIA_DEVICE` rule (architecture §4.9) treat a `COLLECTED` scan with no NVIDIA device as proof of absence. | An omitted device could be the NVIDIA GPU, so a "no NVIDIA GPU" conclusion could be wrong. | **Open** (reviewed in Stage 6.6, retained): IMP-D01, IMP-D04 and IMP-R01 must check the `pci` run status or its `collection_errors` before concluding absence. The PCI collector already supplies both (S63-DEVICE); nothing consumes them yet. No `note` added to the section. |
-| KI-33 | A whole-scan PCI `NOT_DETECTED` (no `/sys/bus/pci/devices`, e.g. a kernel without PCI or a container without `/sys`) isn't covered by D04 rows 7–8 or D01, so it would fall to D04 row 9 (`UNKNOWN`). | A host without PCI sysfs could get an `UNKNOWN` availability finding instead of an explained limitation. | **Open** (reviewed in Stage 6.6, retained): IMP-D01 and IMP-D04 must handle `NOT_DETECTED` explicitly (it isn't a failure and isn't proof of absence); IMP-R01's current rule already gives `DEVICE_PRESENCE_UNKNOWN`. No fixture pins this case (S64-COVERAGE). |
+| KI-32 | ~~A `PARTIAL` PCI scan could be read as proof that no NVIDIA GPU exists (D04 row 7, D01 row 7, `NO_NVIDIA_DEVICE`).~~ **Resolved 2026-11-11** (§1.13, DEC-50 (2)): absence needs a complete scan (the `pci` run `COMPLETED`); a `PARTIAL` scan gives D04 row 8 and `DEVICE_PRESENCE_UNKNOWN`. | — | Unit-tested; no fixture has a `PARTIAL` scan. |
+| KI-33 | ~~A whole-scan PCI `NOT_DETECTED` fell to D04 row 9 (`UNKNOWN`).~~ **Resolved 2026-11-11** (§1.13, DEC-50 (2)): any PCI scan that isn't `COLLECTED` and complete leads to D04 row 8 (`INFO`, MEDIUM, "hardware absence can't be confirmed") when NVML and `nvidia-smi` are absent; readiness gives `DEVICE_PRESENCE_UNKNOWN`. | — | No fixture pins a `NOT_DETECTED` scan. |
 | KI-34 | ~~FX10's `nvml:1` is lost *after* enumeration (collected inventory, lost runtime); one fake NVML session with static faults couldn't express that, and its session-wide faults on `nvmlDeviceGetMemoryInfo_v2` also failed the enumeration's memory read that FX10's own snapshot records as collected.~~ **Resolved 2026-11-11** (§1.9, DEC-46): `FakeNvml` and `StubPynvml` model device loss as a lifecycle (`lost_after_handles`, `lost_on`), the fake's enumeration total comes from the inventory, and FX10's fault input is `nvml_lost_after_handles={1: 1}` (expected snapshot unchanged; old faults kept as `LEGACY_FX10_FAULTS` with a test showing the contradiction). FX10 is back in hardware, NVML-adapter and inspector parity. | — | — |
 | KI-35 | ~~The production adapter set holds a `NOT_IMPLEMENTED` stand-in for the PyTorch probe (DEC-44).~~ **Resolved 2026-11-11** (§1.11, DEC-48): `SubprocessTorchProbe` (or `InProcessTorchProbe` on request) is the production probe. | — | — |
 | KI-36 | **Graphics processes aren't collected** (FR-11, data model §6.1, DEC-46). Current behaviour: `PynvmlDevice.processes()` reads only `nvmlDeviceGetComputeRunningProcesses_v3` (legacy fallback), so `runtime[*].processes` lists compute processes only; data model §6.1 specifies compute **and** graphics processes merged by PID. Evidence: `adapters/nvml.py` (only compute calls), `NVML_DEVICE_FUNCTIONS["processes"]` in `adapters/protocols.py`; data model §6.1 note added in §1.9. | The process list is incomplete for display or graphics workloads (e.g. a desktop compositor using the GPU); FR-11 (MUST) can't be complete. Never present the list as the complete process inventory. | **Open.** Proposed: add `nvmlDeviceGetGraphicsRunningProcesses_v3` (and its legacy fallback) to the read-only allowlist, merge by PID with `kind` from the source call (a PID in both → one entry; the merge rule needs a decision), and extend `StubPynvml`, `FakeNvml` and the runtime fixtures. Verification: unit tests for both calls and the merge; FX parity; HW-03 on real hardware. |
 | KI-37 | **No Windows default CUDA Toolkit location** (FR-07, DEC-47 (2)). Current behaviour: on Windows the locator uses `CUDA_HOME`, `CUDA_PATH`, `CUDA_PATH_V*` and `nvcc` on `PATH`, but not `%ProgramFiles%\NVIDIA GPU Computing Toolkit\CUDA\v*` (architecture §4.6), because `ProgramFiles` isn't in the environment-variable allowlist (data model §5.5, `ENVIRONMENT_ALLOWLIST`) and DEC-47 rejected a hard-coded path. Evidence: `adapters/toolkit.py` (`_defaults()` skipped when `windows`), DEC-47. | A Windows toolkit installed without `CUDA_PATH`/`CUDA_HOME` set and without `nvcc` on `PATH` is reported `NOT_DETECTED`; FR-07 (MUST, "platform default locations") isn't met on Windows. | **Open; needs an owner decision.** Options: allowlist `ProgramFiles` (its value is a path, privacy class **P**, redactable) and list `<ProgramFiles>/NVIDIA GPU Computing Toolkit/CUDA` non-recursively for `v<version>` entries; or keep Windows on explicit signals and amend FR-07. Security and path validation: the variable's value must be an absolute local path, resolved before use, never a UNC/network path, and the listing must stay one level deep. Verification: fake Windows trees in `unit/test_toolkit_locator.py`; a real Windows host (KI-27). The allowlist isn't widened without that decision. |
 | KI-38 | **PCI domains wider than the parser accepts stay unresolved** (DEC-49 (2), AC19). Current behaviour: `normalise_pci_bus_id` accepts 4- or 8-hex-digit domains; the PyTorch probe formats the domain with `%04x`, so a domain above `0xffff` (e.g. Intel VMD domains such as `10000`) prints as 5 digits and is unusable, while NVML prints it as 8 digits (`00010000:…`). Evidence: `collectors/correlation.py` (`_PCI`), `adapters/torch_probe_payload.py` (`_device`); confirmed in the post-IMP-K07 review (`normalise_pci_bus_id("10000:01:00.0")` is `None`). | On such hosts the PCI fallback can't correlate a device whose UUID PyTorch doesn't expose; the device stays `NOT_DETECTED`/`NO_IDENTIFIER` or `UNIDENTIFIED_CANDIDATES`. Never a wrong match. | **Open.** Proposed: accept 4–8 hex-digit domains on both sides (or have the probe print 8 digits) once a source documents the formats; don't loosen validation without that evidence. Verification: unit cases for 5-digit domains; HW-09 on a VMD host. |
-| KI-39 | **Project 01 isn't under version control** (post-IMP-K07 review, H1). Current behaviour: `projects/01-gpu-system-inspector/` (141 files once `.gitignore` applies) is untracked in the root repository (`git status`: `??`); the only commit (`3b8d4c8`) predates it. Evidence: `git status`, `git log`, `git add --dry-run` (2026-11-11, nothing staged). | No history, no recovery point and no diffable baseline for the work since Stage 1; reviews can't refer to commits. | **Open** until the owner establishes an authorized baseline (see the governance report of 2026-11-11 for the recommended first operation). Verification: the files appear in `git ls-files`. |
+| KI-40 | ~~`--required-vram` values that round to 0 bytes (e.g. `1e-12`) passed validation, ran a whole inspection and ended with exit 5 (`InvalidModelError` on `required_bytes`).~~ **Resolved 2026-11-11** (§1.14): rejected before inspection, CLI exit 2; `InspectionOptions` raises. | — | — |
+| KI-41 | **The built wheel contains no license file.** `LICENSE` (Apache-2.0) lives at the repository root, outside the project directory hatchling builds from; the metadata says `License-Expression: Apache-2.0` but no `License-File`. | A distributed wheel wouldn't carry the license text. No impact while unpublished. | **Open; release action for the owner** (with OQ-03 and the other publication items, [roadmap.md](roadmap.md#owner-decision-required)): e.g. a copy of the repository `LICENSE` in the project directory, as the package policy requires for packages. |
+| KI-39 | ~~Project 01 isn't under version control.~~ **Resolved 2026-11-11** by the owner: baseline commit `80c2b95` on branch `feat/gpu-system-inspector-baseline`; `git ls-files projects/01-gpu-system-inspector` lists 141 files. The sprint's changes are uncommitted (no commit authorized). | — | — |
 
 ## 10. Decisions and change history
 
@@ -850,6 +923,9 @@ Decision details: [architecture.md](architecture.md) §6.
 | 2026-11-10 | **Stages 6.4–6.6 executed** (§1.6.4–§1.6.6): collector-level PCI parity for all 24 fixture variants (FX03, FX17 named); `pci` fake collector and `sysfs_reader_for` in the test kit; PCI host test on this WSL2 machine (gated, no `/sys` access); documentation consolidated (architecture §4.5.5 heading, DEC order, §4.11 integration readiness; data flow §1 ②; data model §4.2; testing strategy §5, §8); KI-32/KI-33 reviewed and kept open. **Stage 6 complete** for synthetic/software and WSL2-host validation; HW-02 `BLOCKED`. No fixture, source, dependency or configuration change. 102 new tests. |
 | 2026-11-11 | **Integration milestone executed** (§1.7, DEC-44): IMP-K08 core (one `Collector` contract, single guard owning `FAILED`, `COLLECTOR_ORDER`, fail-closed environment, scanner built after classification, NVML session), IMP-K02 `GpuHardwareCollector` (NVML + `nvidia-smi` fallback, PCI section consumed and kept, `NVIDIA.ALL`), IMP-P01 `assemble_report`, `api.inspect()`, `NOT_IMPLEMENTED` production stand-ins, `examples/inspect_demo.py`. FX13's `SYSTEM.MEMORY_AVAILABLE` reason corrected to match its own system section. KI-34, KI-35 added; KI-32/KI-33 stay open. No dependency or configuration change. 279 new tests. |
 | 2026-11-11 | **Production NVIDIA adapters executed** (§1.8, DEC-45): IMP-A05 `SubprocessCommandRunner` (no shell, bounded, captured), IMP-A01 `PynvmlAdapter` (lazy injectable binding, lifecycle, error mapping, fallbacks, macOS gate), IMP-A02 `NvidiaSmiCli` (CSV query parser, header versions, WSL2 path, macOS gate); NVML/`nvidia-smi` precedence policy (never merge); production factory wired, only the PyTorch probe still a stand-in; `StubPynvml` added to the test kit; data model §3.3 `nvidia-smi` rows. KI-35 narrowed to the PyTorch probe; KI-25 partly resolved. No dependency change (`uv.lock` byte-identical). 178 new tests. |
+| 2026-11-11 | **Demo-ready completion sprint executed** (§1.13, DEC-50): diagnostics engine and rules D01–D08 (IMP-D00–D08), readiness (IMP-R01), text renderer (IMP-P03), redaction (IMP-P04), atomic writer (IMP-P05) and `inferforge-gpu inspect` (IMP-C01–C03); exit code 6 removed; `READINESS.MIG` owned by the GPU hardware collector; D02 `UNKNOWN` confidence expectation corrected (FX04b, FX09, FX14); KI-15, KI-32, KI-33 resolved, KI-39 resolved by the owner's baseline commit; live demo on this WSL2 host and a labelled synthetic showcase script. No dependency, lock, schema or root-workspace change; nothing committed. |
+
+| 2026-11-11 | **Public-readiness and hardware-validation preparation sprint** (§1.14): trust audit (no defect in diagnostics, readiness or redaction); KI-40 fixed (sub-byte `--required-vram`); hardware tests HW-01–HW-13 and `validation/hardware_evidence.py` written, HW-13 passed here, NVIDIA hardware still `BLOCKED`; AC42 `TESTED`; Python 3.11 tested from the wheel (KI-13 resolved); packaging review (KI-41 opened); README, CONTRIBUTING, troubleshooting, demonstration, roadmap, good first issues, hardware-validation procedure, example reports, issue forms. No dependency, lock, schema or protected root file changed; no owner decision taken; nothing committed. |
 
 ### Finalized decisions
 
@@ -919,6 +995,9 @@ Decision details: [architecture.md](architecture.md) §6.
 | 2026-11-11 | PyTorch: IMP-A07 probe, IMP-K06 collector (DEC-48), KI-35 (§1.11) | 2347 passed (20 `host`); coverage 97.18%; isolated wheel 2320 passed + 27 skipped; `uv.lock` unchanged |
 | 2026-11-11 | Device correlation: IMP-K07 (DEC-09 applied, DEC-49) (§1.12) | 2410 passed (20 `host`); coverage 97.24%; isolated wheel 2383 passed + 27 skipped; `uv.lock` unchanged |
 | 2026-11-11 | Pre-diagnostics governance reconciliation (post-IMP-K07 review findings H1, M1–M4, M6, L5, L8) | Only change outside `docs/`: the `api.py` module docstring. KI-36 to KI-39 added; DEC-04/06/07/08 marked "Proposed; applied", owner approval not recorded; DEC-26 OQ-09 reference updated; DEC-48 (4) marked superseded by DEC-49 (5); DEC-43 row reordered; FR-11/12/13 and AC43 notes corrected; AC05, AC13, AC25, AC54 `TESTED` with their evidence; OQ-11 current state recorded; no hardware status changed |
+| 2026-11-11 | Demo-ready completion sprint: IMP-D00–D08, IMP-R01, IMP-P03–P05, IMP-C01–C03 (§1.13, DEC-50) | 2716 passed (21 `host`); coverage 97.10% (`diagnostics/rules.py` 99%, `reporting/text_report.py` 99%, `readiness/engine.py` 96%, `reporting/redaction.py` 93%); root 34 passed; `check_dependencies.py`, `ruff check .`, `ruff format --check .`, `uv lock --check` clean; isolated wheel `/tmp/inferforge-isolated-01-gpu-system-inspector-sprint-5oGdQ3` (74 entries, no test kit or examples, requires only `nvidia-ml-py`) 2689 passed + 27 skipped, installed `inferforge-gpu inspect` exit 0 `LIVE`, `--required-vram 8` exit 3, `--redact --json` schema-valid without user name or home path; no root file touched; nothing staged or committed |
+
+| 2026-11-11 | Public-readiness and hardware-validation preparation sprint (§1.14) | Project suite **2751 passed**, 14 hardware tests deselected (23 `host`); coverage **97.14%** (threshold 92%); root 34 passed; `ruff check .` and `ruff format --check .` clean (project and root); `check_dependencies.py` passed; `uv lock --check` clean; isolated wheel outside the repository: CPython 3.12.12 and 3.11.15 each 2691 passed + 28 skipped; `pytest -m hardware` here 3 passed, 11 skipped; evidence script verdict `BLOCKED`; seven protected root files and `docs/python-version-review.md` untouched; nothing staged or committed |
 
 ## 12. In-progress work
 
@@ -933,14 +1012,16 @@ Decision details: [architecture.md](architecture.md) §6.
 | Driver and runtime collectors (IMP-K03, IMP-K04; KI-34, KI-16) | Complete (synthetic and WSL2 host); HW-01 `BLOCKED` | §1.9. |
 | CUDA environment (OQ-10/DEC-47, IMP-A06, IMP-K05) | Complete (synthetic and WSL2 host); HW-05 not run | §1.10. |
 | PyTorch (IMP-A07, IMP-K06; DEC-48) | Complete (synthetic, stub child, WSL2 host); HW-04, HW-06 `BLOCKED` | §1.11. |
-| Device correlation (IMP-K07; DEC-49) | Complete (synthetic and WSL2 host); HW-09 `BLOCKED` | §1.12. Next recommended: diagnostics (IMP-D*) or the CLI (IMP-C01, IMP-P03), on request. |
+| Device correlation (IMP-K07; DEC-49) | Complete (synthetic and WSL2 host); HW-09 `BLOCKED` | §1.12. |
+| Public-readiness sprint (§1.14) | Complete (software, docs, WSL2 host); hardware `BLOCKED` | Owner review of the new documentation; run the hardware procedure on Colab; owner decisions in [roadmap.md](roadmap.md#owner-decision-required). |
+| Demo-ready completion sprint (DEC-50) | Complete (synthetic and WSL2 host); hardware `BLOCKED` | §1.13. Next: owner review of DEC-44–DEC-50 and the open items listed in §1.13; KI-36 (graphics processes) to complete FR-11; hardware validation when an NVIDIA machine is available. |
 
 ## 13. Blocked work
 
 | Item | Blocker | Unblock condition |
 | ---- | ------- | ----------------- |
-| HW-01 to HW-09, HW-11, HW-12; DEMO-02 | No NVIDIA GPU, driver, toolkit or macOS machine available (OBS-01) | Access to a Linux machine with an NVIDIA GPU (ideally also WSL2-with-NVIDIA, Windows, multi-GPU and macOS machines). |
-| S1-PY311: direct Python 3.11 validation | No 3.11 interpreter installed; installing one needs approval | User approves `uv python install 3.11`; then run root and project tests with `uv run --python 3.11 pytest`. |
+| HW-01 to HW-09, HW-11, HW-12; DEMO-02 | No NVIDIA GPU, driver, toolkit or macOS machine available (OBS-01) | Access to a Linux machine with an NVIDIA GPU (Google Colab is enough for HW-01, HW-03, HW-04, HW-05, HW-10; ideally also WSL2-with-NVIDIA, Windows, multi-GPU and macOS machines). Run [hardware_validation.md](hardware_validation.md) and send back the evidence bundle (§5 there). |
+| ~~S1-PY311: direct Python 3.11 validation~~ | **Resolved 2026-11-11** (§1.14): tested from the installed wheel on CPython 3.11.15 | Optional: the root tooling tests on 3.11 (not run, to keep the workspace environment on 3.12). |
 | Isolated-install script support for projects (WSD-02) | Repository policy decision | Maintainer decides whether the script should accept projects. |
 
 ## 14. Deferred work (out of V1)
@@ -966,10 +1047,11 @@ interfaces, outcomes, lifecycle contracts and `AdapterSet`, and added `FakeComma
 6. Adapters (implementations of the Stage 4 protocols): `CommandRunner`, `PlatformAdapter`, `NvmlAdapter`, `NvidiaSmiAdapter`,
    `PciSysfsAdapter`, `ToolkitLocator`, `TorchProbe` (IMP-A*), with unit tests.
 7. Collectors + core guard/ordering + correlation (IMP-K*), with integration tests. Done: system (IMP-K01), PCI (IMP-K09), GPU hardware (IMP-K02), driver (IMP-K03), runtime metrics (IMP-K04), CUDA environment (IMP-K05) and PyTorch (IMP-K06) collectors, device correlation (IMP-K07), the core (IMP-K08) and report assembly (IMP-P01). Step 6 progress: the command runner, NVML and `nvidia-smi` adapters (IMP-A05, A01, A02) are done; the toolkit locator (IMP-A06) and the PyTorch probe (IMP-A07) are done. All collectors done (IMP-K01 to IMP-K09).
-8. Readiness engine (IMP-R01).
-9. Diagnostics engine and rules D01–D08 (IMP-D*), with the fixture matrix.
-10. Reporting: assembly, text renderer, redaction, atomic writer (IMP-P*).
-11. CLI (`inferforge-gpu`) and Python API (IMP-C01–C06).
+8. ~~Readiness engine (IMP-R01).~~ Done (§1.13).
+9. ~~Diagnostics engine and rules D01–D08 (IMP-D*), with the fixture matrix.~~ Done (§1.13).
+10. ~~Reporting: assembly, text renderer, redaction, atomic writer (IMP-P*).~~ Done (§1.7, §1.13).
+11. ~~CLI (`inferforge-gpu`) and Python API (IMP-C01–C06).~~ Done (§1.13); API stability review (IMP-C06) pending.
+11a. KI-36 graphics processes (FR-11), then the owner decisions KI-37, KI-38, OQ-11, L4.
 12. Quality gates: ruff, types, coverage, `check_dependencies` (TST-15, AC51).
 13. HW-13 and HW-10 on the WSL2 dev machine; user check of AC01/AC38 (MAN).
 14. Hardware validation on NVIDIA machines (HW-01 to HW-12) when available.
@@ -979,17 +1061,17 @@ interfaces, outcomes, lifecycle contracts and `AdapterSet`, and added `FakeComma
 
 | Measure | Value |
 | ------- | ----- |
-| Phase | Stages 1–5.1 and 6 complete (workspace, package, CLI bootstrap; data foundation; synthetic fixtures, fakes, coverage; adapter contracts; system/platform inspection and its correction; PCI sysfs seam and adapter; PCI eligibility policy; PCI collector, fixture parity, WSL2 host validation, documentation consolidation), plus the integration milestone (IMP-K08 core, IMP-K02 GPU hardware collector, IMP-P01 report assembly, `api.inspect()`). Production NVML, `nvidia-smi` and command-runner adapters (IMP-A01, A02, A05) wired into `api.inspect()`; never run on NVIDIA hardware (HW-01 `BLOCKED`). Native-Linux PCI hardware validation (HW-02) `BLOCKED`. |
+| Phase | Stages 1–5.1 and 6 complete; integration milestone, production NVIDIA adapters, all collectors (§1.7–§1.12) and the **demo-ready completion sprint** (§1.13, DEC-50): diagnostics D01–D08, readiness, text report, redaction, atomic writer and `inferforge-gpu inspect`. A functional MVP validated synthetically and live on one WSL2 host without NVIDIA. **Public-readiness sprint** (§1.14): hardware tests and evidence bundle ready, Python 3.11 tested from the wheel, contributor and user documentation. HW-01 to HW-12 `BLOCKED`; FR-11 incomplete (KI-36). |
 | Product decisions | Finalized and approved (§10) |
-| Acceptance criteria met | 0 / 60. `IN_PROGRESS`: AC04, AC05, AC09, AC13, AC18, AC25, AC45, AC46, AC50, AC53. |
+| Acceptance criteria met | 32 / 60 (AC02, AC03, AC05, AC07, AC08, AC10, AC13, AC15, AC18, AC20–AC28, AC30–AC34, AC39, AC40, AC42, AC46–AC48, AC54, AC58, AC59). `TESTED` but below a hardware or user-verification target: AC01, AC29, AC35. `IN_PROGRESS`: AC04, AC09, AC12, AC16, AC17, AC19, AC43, AC45, AC49, AC50, AC53, AC57, AC60. |
 | AC traceability | 60 / 60 mapped to requirement, component and verification |
-| Code | CLI bootstrap (`cli/`); the data foundation: `models/` (13 modules) and `reporting/` (`json_report.py`, `schema.py`, `__main__.py`, shipped schema); `adapters/` (contracts, `SystemClock`, `OsPlatformAdapter`, `PciSysfsAdapter`); `collectors/` (`Collector` contract, `SystemCollector`, `collect_environment`, PCI capability policy, `PciCollector`, `GpuHardwareCollector`); `core/` (guard, inspector, environment resolution, production factory); `reporting/assemble.py`; `api.py`; `adapters/unimplemented.py` (stand-ins). Host access is read-only and limited to `OsPlatformAdapter` and the native-Linux-only PCI reader; no NVIDIA, process or network access. |
-| Automated tests | Project 01: 1985 passed (workspace, including 17 host tests) / 1958 passed + 27 skipped (isolated venv), CPython 3.12.12; coverage 97.17%. Root: 34 passed. |
+| Code | `models/`, `adapters/` (platform, PCI sysfs, command runner, NVML, `nvidia-smi`, toolkit locator, PyTorch probe), `collectors/` (system, PCI, GPU hardware, driver, `nvidia-smi`, runtime, CUDA environment, PyTorch, correlation), `core/` (guard, inspector, environment, factory), `diagnostics/` (engine, rules D01–D08), `readiness/`, `reporting/` (assembly, JSON, schema, text, redaction, writer), `cli/`, `api.py`. Host access is read-only, through the adapters only; no network access. |
+| Automated tests | Project 01: 2751 passed (workspace, including 23 host tests; 14 hardware tests deselected) / 2691 passed + 28 skipped (isolated wheel venv, on CPython 3.12.12 and on 3.11.15); coverage 97.14%. Root: 34 passed (§1.14). |
 | Synthetic test kit | 24 fixture variants, 30 report cases, 9 fakes (including `FakeCommandRunner`) conforming to the adapter protocols, plus the `FakeHostApi` and `FakeSysfsReader` seam fakes and `FakeCollector` (with a `pci` entry), in `tests/gsi_testkit/` (not shipped). Synthetic evidence only: no AC or HW item completed because of it. |
-| Adapter layer | Interfaces, outcomes, lifecycle contracts, `AdapterSet`, `SystemClock`, the production `OsPlatformAdapter`, `PciSysfsAdapter` (synthetic tests only), `SubprocessCommandRunner`, `PynvmlAdapter` and `NvidiaSmiCli` in `adapters/`; the PyTorch probe is a stand-in. On this WSL2 host the real NVML binding ran (`nvmlInit` → library not found, no session) and `nvidia-smi` wasn't found; no NVML session on NVIDIA hardware, real `nvidia-smi` run or PyTorch probe has ever been executed. |
-| Production collectors | System/platform (Stage 5), read-only, stdlib only; PCI (Stage 6: synthetic tests, fixture parity, gated on this WSL2 host; never run against real native-Linux sysfs); GPU hardware (production NVML/`nvidia-smi` adapters since §1.8; synthetic and no-NVIDIA-host evidence only). All run through `api.inspect()`; none is reachable from the CLI yet (KI-15). |
-| Hardware validation | None (blocked) |
+| Adapter layer | All production adapters implemented (§1.8, §1.10, §1.11). On this WSL2 host the real NVML binding ran (library not found), `nvidia-smi` and a toolkit weren't found and PyTorch isn't installed; no NVML session on NVIDIA hardware, real `nvidia-smi` run or real PyTorch probe has ever been executed. |
+| Production collectors | All ten run through `api.inspect()` and `inferforge-gpu inspect` (KI-15 resolved); synthetic and no-NVIDIA-host evidence only. |
+| Hardware validation | None on NVIDIA hardware (blocked); tests, evidence script and procedure ready (§1.14). HW-13 (no-driver machine) passed on the WSL2 host |
 | User verification | Specification documents approved 2026-11-04 (§7). No implementation or test item is user-verified. |
-| Python 3.11 | Declared floor; not directly tested (S1-PY311 `BLOCKED`) |
+| Python 3.11 | Tested from the installed wheel on CPython 3.11.15 (§1.14); the editable workspace runs 3.12.12 |
 | Workspace integrity after Stage 1 | `uv lock --check` clean; `check_dependencies.py` passed; `ruff check .` clean; `uv sync` OK (2026-11-04) |
-| Files changed outside the project (cumulative) | `pyproject.toml`, `uv.lock`, `scripts/_workspace.py`, `scripts/verify_isolated_install.py`, `scripts/tests/conftest.py`, `README.md`, `projects/README.md`, `docs/python-version-review.md` (new); `.venv` recreated. |
+| Files changed outside the project (cumulative) | `pyproject.toml`, `uv.lock`, `scripts/_workspace.py`, `scripts/verify_isolated_install.py`, `scripts/tests/conftest.py`, `README.md`, `projects/README.md`, `docs/python-version-review.md` (new); `.venv` recreated. §1.14 added only new files outside the project: `.github/ISSUE_TEMPLATE/gpu-system-inspector-bug.yml` and `-feature.yml`. |

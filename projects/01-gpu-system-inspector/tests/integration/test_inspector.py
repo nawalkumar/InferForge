@@ -29,7 +29,7 @@ from gpu_system_inspector.adapters.outcomes import (
     UNHANDLED_EXCEPTION,
 )
 from gpu_system_inspector.collectors import GPU_PCI_SCAN, NVIDIA_ALL
-from gpu_system_inspector.core import NOT_IMPLEMENTED_LIMITATION, Inspector
+from gpu_system_inspector.core import SCOPE_LIMITATION, Inspector
 from gpu_system_inspector.models import (
     SNAPSHOT_LIMITATION,
     CollectionError,
@@ -70,9 +70,11 @@ all_fixtures = pytest.mark.parametrize("fixture", ALL_FIXTURES, ids=lambda f: f.
 
 
 def _owned(record: UnsupportedCapability) -> bool:
-    return record.capability in (GPU_PCI_SCAN, NVIDIA_ALL) or record.capability.startswith(
-        ("SYSTEM.", "RUNTIME.", "CUDA.")
-    )
+    return record.capability in (
+        GPU_PCI_SCAN,
+        NVIDIA_ALL,
+        "READINESS.MIG",
+    ) or record.capability.startswith(("SYSTEM.", "RUNTIME.", "CUDA."))
 
 
 def _inspect(fixture, *, adapters=None, factory=None):
@@ -164,7 +166,7 @@ def test_every_report_is_valid_complete_and_deterministic(fixture):
     assert parse_report_json(text) == report
     assert render_json(_inspect(fixture)[0]) == text
     assert report.data_origin is DataOrigin.FIXTURE and report.mode is InspectionMode.GENERAL
-    assert report.limitations == (SNAPSHOT_LIMITATION, NOT_IMPLEMENTED_LIMITATION)
+    assert report.limitations == (SNAPSHOT_LIMITATION, SCOPE_LIMITATION)
     assert [r.collector for r in report.collector_runs] == [
         c for c in COLLECTOR_ORDER if c in IMPLEMENTED
     ]
@@ -175,7 +177,8 @@ def test_every_report_is_valid_complete_and_deterministic(fixture):
         report.cuda_environment.toolkits.error.code != NOT_IMPLEMENTED
     )
     assert report.frameworks.pytorch.status is not S.SKIPPED  # include_pytorch defaults on
-    assert report.diagnostics == () and report.readiness is None
+    assert {f.check_id for f in report.diagnostics} == {f"D0{i}" for i in range(1, 9)}
+    assert report.readiness is None
     failed = {c for c, status in _runs(report).items() if status is R.FAILED}
     assert failed == {  # only the fixture's own failures (FX10's injected CUDA crash)
         r.collector
@@ -451,10 +454,12 @@ def test_assembly_states_the_snapshot_limitation_first_and_once():
     assert report.limitations == (SNAPSHOT_LIMITATION, "extra")
 
 
-def test_mode_b_is_refused_until_readiness_exists():
+def test_mode_b_runs_the_readiness_engine():
     inspector = Inspector(FakeAdapterSet.from_scenario(FIXTURES_BY_ID["FX01"]).adapter_set())
-    with pytest.raises(NotImplementedError, match="IMP-R01"):
-        inspector.run(InspectionOptions(required_vram_gib=8))
+    report = inspector.run(InspectionOptions(required_vram_gib=8))
+    assert report.mode is InspectionMode.READINESS
+    assert report.readiness is not None and report.readiness.required_vram_gib == 8
+    assert {f.check_id: f.status for f in report.diagnostics}["D02"].value == "PASS"
 
 
 def test_the_inspector_needs_an_adapter_set():

@@ -1,8 +1,10 @@
 """Public Python API (architecture §4.2, DEC-44).
 
 `inspect()` runs one live, read-only inspection with the production adapters and returns a
-model-validated `InspectionReport` (Mode A). Serialise it with `reporting.render_json`.
-Nothing is installed or written, and no device setting is changed. What it may touch:
+model-validated `InspectionReport` with the diagnostics findings (D01–D08) and, when
+`required_vram_gib` is set (Mode B), the readiness result. Render it with
+`reporting.render_json` / `render_text`; `reporting.redact` before sharing it. Nothing is
+installed or written, and no device setting is changed. What it may touch:
 
 - **NVML**, in this process: `pynvml` is imported and `nvmlInit` called once (not on macOS),
   read-only queries only, and, if the init succeeded, `nvmlShutdown` once after the

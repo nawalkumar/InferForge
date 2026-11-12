@@ -3,7 +3,8 @@
 The device inventory comes from the shared NVML session (opened and closed by the core,
 never here), with the `nvidia-smi` query as the fallback when NVML can't count devices. The
 PCI observations are the `PciCollector`'s section, passed in unchanged: this collector never
-scans PCI and never emits `GPU.PCI_SCAN` (DEC-43). It owns `NVIDIA.ALL` (macOS).
+scans PCI and never emits `GPU.PCI_SCAN` (DEC-43). It owns `NVIDIA.ALL` (macOS) and, per device
+with MIG enabled, `READINESS.MIG` (MIG instances aren't enumerated in V1; DEC-50, AC39).
 """
 
 from __future__ import annotations
@@ -30,10 +31,13 @@ from gpu_system_inspector.models import (
     PciObservation,
     PlatformProfile,
     Source,
+    UnsupportedCapability,
 )
 from gpu_system_inspector.models.gpu import NVIDIA_VENDOR
 
 GPU_REPORT_PATH = "/gpu"
+READINESS_MIG = "READINESS.MIG"
+READINESS_MIG_REASON = "MIG instances are not enumerated in V1."
 FALLBACK_FIELD_UNAVAILABLE = "FALLBACK_FIELD_UNAVAILABLE"
 FALLBACK_FIELD_MESSAGE = "not part of the nvidia-smi fallback query"
 SMI_COUNT_METHOD = "nvidia-smi --query-gpu=index"
@@ -105,8 +109,21 @@ class GpuHardwareCollector:
             status=CollectorRunStatus.PARTIAL if partial else CollectorRunStatus.COMPLETED,
             duration_ms=max(0, self._clock.monotonic_ms() - started),
         )
+        mig = tuple(
+            UnsupportedCapability(
+                capability=READINESS_MIG,
+                status=CollectionStatus.NOT_SUPPORTED,
+                device_ref=device.device_ref,
+                reason=READINESS_MIG_REASON,
+            )
+            for device in inventory.devices
+            if device.mig_mode.value == "ENABLED"
+        )
         return CollectorOutcome(
-            section=inventory, run=run, errors=tuple(errors), unsupported=self._unsupported
+            section=inventory,
+            run=run,
+            errors=tuple(errors),
+            unsupported=(*self._unsupported, *mig),
         )
 
     def unavailable(self, error: ErrorDetail) -> GPUInventory:

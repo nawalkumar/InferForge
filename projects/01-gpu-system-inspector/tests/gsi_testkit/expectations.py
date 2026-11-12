@@ -178,6 +178,9 @@ def readiness_run(
         ReadinessStatus.NOT_READY: S.FAIL,
         ReadinessStatus.UNKNOWN: S.UNKNOWN,
     }[overall]
+    if d02_confidence is None and d02_status is S.UNKNOWN:
+        # D02 mapping table: UNKNOWN carries confidence NOT_APPLICABLE (DEC-50).
+        d02_confidence = Confidence.NOT_APPLICABLE
     d02 = expect(
         "D02", d02_status, f"D02 mapping from readiness {overall}", confidence=d02_confidence
     )

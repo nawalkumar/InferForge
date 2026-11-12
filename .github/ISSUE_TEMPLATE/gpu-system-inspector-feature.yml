@@ -1,0 +1,73 @@
+name: "GPU System Inspector: feature proposal"
+description: Propose a new check, field or behaviour for inferforge-gpu (Project 01).
+title: "[gpu-inspector] proposal: "
+labels: ["project-01", "enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check projects/01-gpu-system-inspector/docs/roadmap.md first: the item may already be
+        planned, deferred, decided against, or waiting for an owner decision.
+        The inspector is read-only and diagnostic. CUDA/Triton kernels, performance
+        optimisation, inference optimisation and model serving belong to other InferForge
+        projects.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What can't users find out or trust today? A real situation helps most.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behaviour
+      description: Which report section, finding or option changes, and what it would say.
+    validations:
+      required: true
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Layer
+      options:
+        - System
+        - GPU hardware / NVML
+        - Driver and CUDA
+        - CUDA Toolkit
+        - PyTorch
+        - Runtime snapshot
+        - Diagnostics (D01–D08 or a new check)
+        - Readiness
+        - Reports, CLI or API
+        - Packaging or documentation
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Source of truth
+      description: >
+        The official NVIDIA, PyTorch or Python documentation (or tool output) the behaviour
+        would rely on. Findings may only cite official sources.
+    validations:
+      required: true
+  - type: checkboxes
+    id: constraints
+    attributes:
+      label: Constraints
+      options:
+        - label: It stays read-only (installs nothing, changes no GPU state, no network access).
+          required: true
+        - label: It reports missing information as a status with a reason, never as a made-up value.
+          required: true
+        - label: It needs no new runtime dependency (or the proposal explains why one is necessary).
+  - type: dropdown
+    id: hardware
+    attributes:
+      label: Can it be verified without NVIDIA hardware?
+      options:
+        - Yes, with fixtures and fakes
+        - Partly; a hardware test would be needed to validate it
+        - No, it only makes sense on specific hardware
+    validations:
+      required: true

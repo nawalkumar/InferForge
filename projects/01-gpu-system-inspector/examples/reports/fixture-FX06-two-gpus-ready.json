@@ -1,0 +1,1578 @@
+{
+  "schema_name": "inferforge.gpu_system_inspector.report",
+  "schema_version": "1.0",
+  "application": {
+    "name": "gpu-system-inspector",
+    "display_name": "GPU System Inspector",
+    "distribution": "01-gpu-system-inspector",
+    "version": "0.1.0"
+  },
+  "generated_at": "2026-01-01T00:00:00Z",
+  "duration_ms": 155,
+  "data_origin": "FIXTURE",
+  "mode": "READINESS",
+  "options": {
+    "required_vram_gib": 16.0,
+    "include_pytorch": true,
+    "include_processes": true,
+    "redact": false,
+    "subprocess_timeout_s": 10.0,
+    "pytorch_timeout_s": 60.0,
+    "pytorch_probe_mode": "SUBPROCESS"
+  },
+  "system": {
+    "platform_profile": "LINUX",
+    "os_name": {
+      "value": "Linux",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "fixture:platform.system()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "os_release": {
+      "value": "6.8.0-synthetic",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "fixture:platform.release()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "os_version": {
+      "value": "#1 SMP synthetic",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "fixture:platform.version()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "os_distribution": {
+      "value": "Synthetic Linux 24.04 (fixture)",
+      "status": "COLLECTED",
+      "source": "OS",
+      "method": "fixture:/etc/os-release:PRETTY_NAME",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "architecture": {
+      "value": "x86_64",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "fixture:platform.machine()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "processor_model": {
+      "value": "Synthetic CPU (fixture)",
+      "status": "COLLECTED",
+      "source": "OS",
+      "method": "fixture:/proc/cpuinfo:model name",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "logical_cpu_count": {
+      "value": 16,
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "fixture:os.cpu_count()",
+      "unit": null,
+      "error": null,
+      "note": "Logical CPUs in the system; this process may be restricted to fewer."
+    },
+    "memory_total_bytes": {
+      "value": 68719476736,
+      "status": "COLLECTED",
+      "source": "OS",
+      "method": "fixture:/proc/meminfo:MemTotal",
+      "unit": "bytes",
+      "error": null,
+      "note": "MemTotal: physical RAM usable by the kernel (installed RAM minus firmware and kernel reservations); excludes swap."
+    },
+    "memory_available_bytes": {
+      "value": 51539607552,
+      "status": "COLLECTED",
+      "source": "OS",
+      "method": "fixture:/proc/meminfo:MemAvailable",
+      "unit": "bytes",
+      "error": null,
+      "note": "MemAvailable: kernel estimate of memory available to start new applications without swapping; not MemFree and not this process's memory."
+    },
+    "python_version": {
+      "value": "3.12.12",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "fixture:platform.python_version()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "python_implementation": {
+      "value": "CPython",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "fixture:platform.python_implementation()",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "python_executable": {
+      "value": "/opt/synthetic/venv/bin/python",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "fixture:sys.executable",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "linux_environment": {
+      "value": "NATIVE_LINUX",
+      "status": "COLLECTED",
+      "source": "INSPECTOR",
+      "method": "fixture:classify(/proc/sys/kernel/osrelease, /proc/version)",
+      "unit": null,
+      "error": null,
+      "note": "No Microsoft or WSL marker in kernel release '6.8.0-synthetic' or /proc/version: not WSL (this doesn't distinguish bare metal from a virtual machine)."
+    }
+  },
+  "gpu": {
+    "device_count": {
+      "value": 2,
+      "status": "COLLECTED",
+      "source": "NVML",
+      "method": "fixture:nvmlDeviceGetCount_v2",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "inventory_source": "NVML",
+    "devices": [
+      {
+        "device_ref": "nvml:0",
+        "nvml_index": 0,
+        "vendor": "NVIDIA",
+        "name": {
+          "value": "Synthetic GPU B (fixture)",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetName",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "uuid": {
+          "value": "GPU-bbbbbbbb-0000-4000-8000-00000000000b",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetUUID",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "pci_bus_id": {
+          "value": "00000000:01:00.0",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetPciInfo_v3",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "pci_device_id": {
+          "value": "0x268410de",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetPciInfo_v3",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "pci_subsystem_id": {
+          "value": "0x00000000",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetPciInfo_v3",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "memory_total_bytes": {
+          "value": 12884901888,
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+          "unit": "bytes",
+          "error": null,
+          "note": null
+        },
+        "compute_capability": {
+          "value": "8.9",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetCudaComputeCapability",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "mig_mode": {
+          "value": "DISABLED",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetMigMode",
+          "unit": null,
+          "error": null,
+          "note": null
+        }
+      },
+      {
+        "device_ref": "nvml:1",
+        "nvml_index": 1,
+        "vendor": "NVIDIA",
+        "name": {
+          "value": "Synthetic GPU A (fixture)",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetName",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "uuid": {
+          "value": "GPU-aaaaaaaa-0000-4000-8000-00000000000a",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetUUID",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "pci_bus_id": {
+          "value": "00000000:02:00.0",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetPciInfo_v3",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "pci_device_id": {
+          "value": "0x268410de",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetPciInfo_v3",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "pci_subsystem_id": {
+          "value": "0x00000000",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetPciInfo_v3",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "memory_total_bytes": {
+          "value": 25769803776,
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+          "unit": "bytes",
+          "error": null,
+          "note": null
+        },
+        "compute_capability": {
+          "value": "8.9",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetCudaComputeCapability",
+          "unit": null,
+          "error": null,
+          "note": null
+        },
+        "mig_mode": {
+          "value": "DISABLED",
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetMigMode",
+          "unit": null,
+          "error": null,
+          "note": null
+        }
+      }
+    ],
+    "pci_observations": {
+      "value": [
+        {
+          "address": "0000:01:00.0",
+          "vendor_id": "0x10de",
+          "device_id": "0x2684",
+          "class_code": "0x030000",
+          "is_nvidia": true,
+          "kernel_driver": {
+            "value": "nvidia",
+            "status": "COLLECTED",
+            "source": "OS",
+            "method": "fixture:/sys/bus/pci/devices/*/driver",
+            "unit": null,
+            "error": null,
+            "note": null
+          }
+        },
+        {
+          "address": "0000:02:00.0",
+          "vendor_id": "0x10de",
+          "device_id": "0x2684",
+          "class_code": "0x030000",
+          "is_nvidia": true,
+          "kernel_driver": {
+            "value": "nvidia",
+            "status": "COLLECTED",
+            "source": "OS",
+            "method": "fixture:/sys/bus/pci/devices/*/driver",
+            "unit": null,
+            "error": null,
+            "note": null
+          }
+        }
+      ],
+      "status": "COLLECTED",
+      "source": "OS",
+      "method": "fixture:/sys/bus/pci/devices",
+      "unit": null,
+      "error": null,
+      "note": null
+    }
+  },
+  "driver": {
+    "nvml_binding": {
+      "value": "13.615.71",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "fixture:importlib.metadata.version",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "nvml_binding_distribution": {
+      "value": "nvidia-ml-py",
+      "status": "COLLECTED",
+      "source": "PLATFORM",
+      "method": "fixture:importlib.metadata.packages_distributions",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "nvml_version": {
+      "value": "12.550.54.15",
+      "status": "COLLECTED",
+      "source": "NVML",
+      "method": "fixture:nvmlSystemGetNVMLVersion",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "driver_version": {
+      "value": "550.54.15",
+      "status": "COLLECTED",
+      "source": "NVML",
+      "method": "fixture:nvmlSystemGetDriverVersion",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "driver_supported_cuda_version": {
+      "value": "12.4",
+      "status": "COLLECTED",
+      "source": "NVML",
+      "method": "fixture:nvmlSystemGetCudaDriverVersion",
+      "unit": null,
+      "error": null,
+      "note": "Newest CUDA version supported by the installed driver. Not the installed CUDA Toolkit version."
+    },
+    "cuda_driver_library": {
+      "value": "12.4",
+      "status": "COLLECTED",
+      "source": "NVML",
+      "method": "fixture:nvmlSystemGetCudaDriverVersion_v2",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "nvidia_smi_path": {
+      "value": "/usr/bin/nvidia-smi",
+      "status": "COLLECTED",
+      "source": "NVIDIA_SMI",
+      "method": "fixture:shutil.which",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "nvidia_smi_driver_version": {
+      "value": "550.54.15",
+      "status": "COLLECTED",
+      "source": "NVIDIA_SMI",
+      "method": "fixture:nvidia-smi header",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "nvidia_smi_cuda_version": {
+      "value": "12.4",
+      "status": "COLLECTED",
+      "source": "NVIDIA_SMI",
+      "method": "fixture:nvidia-smi header",
+      "unit": null,
+      "error": null,
+      "note": null
+    }
+  },
+  "cuda_environment": {
+    "toolkits": {
+      "value": [
+        {
+          "root_path": "/usr/local/cuda-12.4",
+          "discovered_via": [
+            "CUDA_HOME",
+            "NVCC_ON_PATH",
+            "DEFAULT_LOCATION"
+          ],
+          "version": {
+            "value": "12.4.131",
+            "status": "COLLECTED",
+            "source": "CUDA_TOOLKIT",
+            "method": "fixture:version.json:cuda.version",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "nvcc_path": {
+            "value": "/usr/local/cuda-12.4/bin/nvcc",
+            "status": "COLLECTED",
+            "source": "CUDA_TOOLKIT",
+            "method": "fixture:toolkit layout",
+            "unit": null,
+            "error": null,
+            "note": null
+          }
+        }
+      ],
+      "status": "COLLECTED",
+      "source": "CUDA_TOOLKIT",
+      "method": "fixture:toolkit discovery",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "active_nvcc_path": {
+      "value": "/usr/local/cuda-12.4/bin/nvcc",
+      "status": "COLLECTED",
+      "source": "CUDA_TOOLKIT",
+      "method": "fixture:shutil.which",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "active_nvcc_version": {
+      "value": "12.4.131",
+      "status": "COLLECTED",
+      "source": "CUDA_TOOLKIT",
+      "method": "fixture:nvcc --version",
+      "unit": null,
+      "error": null,
+      "note": null
+    },
+    "environment": {
+      "CUDA_DEVICE_ORDER": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "CUDA_DEVICE_ORDER is not set"
+        },
+        "note": null
+      },
+      "CUDA_HOME": {
+        "value": "/usr/local/cuda-12.4",
+        "status": "COLLECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": null,
+        "note": null
+      },
+      "CUDA_PATH": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "CUDA_PATH is not set"
+        },
+        "note": null
+      },
+      "CUDA_VISIBLE_DEVICES": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "CUDA_VISIBLE_DEVICES is not set"
+        },
+        "note": null
+      },
+      "LD_LIBRARY_PATH": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "LD_LIBRARY_PATH is not set"
+        },
+        "note": null
+      },
+      "NVIDIA_DRIVER_CAPABILITIES": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "NVIDIA_DRIVER_CAPABILITIES is not set"
+        },
+        "note": null
+      },
+      "NVIDIA_VISIBLE_DEVICES": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "NVIDIA_VISIBLE_DEVICES is not set"
+        },
+        "note": null
+      },
+      "PYTORCH_ALLOC_CONF": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "PYTORCH_ALLOC_CONF is not set"
+        },
+        "note": null
+      },
+      "PYTORCH_CUDA_ALLOC_CONF": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "PYTORCH_CUDA_ALLOC_CONF is not set"
+        },
+        "note": null
+      },
+      "PYTORCH_NO_CUDA_MEMORY_CACHING": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "PYTORCH_NO_CUDA_MEMORY_CACHING is not set"
+        },
+        "note": null
+      },
+      "PYTORCH_NVML_BASED_CUDA_CHECK": {
+        "value": null,
+        "status": "NOT_DETECTED",
+        "source": "ENVIRONMENT",
+        "method": "fixture:os.environ",
+        "unit": null,
+        "error": {
+          "code": "NOT_SET",
+          "message": "PYTORCH_NVML_BASED_CUDA_CHECK is not set"
+        },
+        "note": null
+      }
+    }
+  },
+  "frameworks": {
+    "pytorch": {
+      "status": "COLLECTED",
+      "distribution_version": {
+        "value": "2.4.1",
+        "status": "COLLECTED",
+        "source": "PYTORCH",
+        "method": "fixture:importlib.metadata.version('torch')",
+        "unit": null,
+        "error": null,
+        "note": null
+      },
+      "version": {
+        "value": "2.4.1+cu124",
+        "status": "COLLECTED",
+        "source": "PYTORCH",
+        "method": "fixture:torch.__version__",
+        "unit": null,
+        "error": null,
+        "note": null
+      },
+      "cuda_build": {
+        "value": true,
+        "status": "COLLECTED",
+        "source": "PYTORCH",
+        "method": "fixture:torch.version.cuda",
+        "unit": null,
+        "error": null,
+        "note": null
+      },
+      "build_cuda_version": {
+        "value": "12.4",
+        "status": "COLLECTED",
+        "source": "PYTORCH",
+        "method": "fixture:torch.version.cuda",
+        "unit": null,
+        "error": null,
+        "note": "CUDA version PyTorch was built with; not the toolkit and not the driver."
+      },
+      "rocm_build": {
+        "value": false,
+        "status": "COLLECTED",
+        "source": "PYTORCH",
+        "method": "fixture:torch.version.hip",
+        "unit": null,
+        "error": null,
+        "note": null
+      },
+      "cudnn_version": {
+        "value": "90100",
+        "status": "COLLECTED",
+        "source": "PYTORCH",
+        "method": "fixture:torch.backends.cudnn.version()",
+        "unit": null,
+        "error": null,
+        "note": null
+      },
+      "cuda_available": {
+        "value": true,
+        "status": "COLLECTED",
+        "source": "PYTORCH",
+        "method": "fixture:torch.cuda.is_available()",
+        "unit": null,
+        "error": null,
+        "note": null
+      },
+      "cuda_init_warnings": [],
+      "device_count": {
+        "value": 2,
+        "status": "COLLECTED",
+        "source": "PYTORCH",
+        "method": "fixture:torch.cuda.device_count()",
+        "unit": null,
+        "error": null,
+        "note": null
+      },
+      "devices": [
+        {
+          "torch_index": 0,
+          "name": {
+            "value": "Synthetic GPU A (fixture)",
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_name",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "compute_capability": {
+            "value": "8.9",
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_capability",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "total_memory_bytes": {
+            "value": 25769803776,
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_properties().total_memory",
+            "unit": "bytes",
+            "error": null,
+            "note": null
+          },
+          "multiprocessor_count": {
+            "value": 128,
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_properties().multi_processor_count",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "uuid": {
+            "value": "aaaaaaaa-0000-4000-8000-00000000000a",
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_properties().uuid",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "pci_bus_id": {
+            "value": "0000:02:00.0",
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_properties().pci",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "correlated_device_ref": {
+            "value": "nvml:1",
+            "status": "COLLECTED",
+            "source": "INSPECTOR",
+            "method": "fixture:uuid",
+            "unit": null,
+            "error": null,
+            "note": null
+          }
+        },
+        {
+          "torch_index": 1,
+          "name": {
+            "value": "Synthetic GPU B (fixture)",
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_name",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "compute_capability": {
+            "value": "8.9",
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_capability",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "total_memory_bytes": {
+            "value": 12884901888,
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_properties().total_memory",
+            "unit": "bytes",
+            "error": null,
+            "note": null
+          },
+          "multiprocessor_count": {
+            "value": 128,
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_properties().multi_processor_count",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "uuid": {
+            "value": "bbbbbbbb-0000-4000-8000-00000000000b",
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_properties().uuid",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "pci_bus_id": {
+            "value": "0000:01:00.0",
+            "status": "COLLECTED",
+            "source": "PYTORCH",
+            "method": "fixture:get_device_properties().pci",
+            "unit": null,
+            "error": null,
+            "note": null
+          },
+          "correlated_device_ref": {
+            "value": "nvml:0",
+            "status": "COLLECTED",
+            "source": "INSPECTOR",
+            "method": "fixture:uuid",
+            "unit": null,
+            "error": null,
+            "note": null
+          }
+        }
+      ],
+      "allocator": {
+        "value": null,
+        "status": "NOT_APPLICABLE",
+        "source": "PYTORCH",
+        "method": null,
+        "unit": null,
+        "error": null,
+        "note": "Allocator statistics describe only the calling process; the inspector's probe process has made no allocations."
+      },
+      "probe": {
+        "mode": "SUBPROCESS",
+        "protocol_version": 2,
+        "duration_ms": 1500
+      }
+    }
+  },
+  "runtime": [
+    {
+      "device_ref": "nvml:0",
+      "sampled_at": "2026-01-01T00:00:00Z",
+      "gpu_utilization_percent": {
+        "value": 3,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetUtilizationRates",
+        "unit": "percent",
+        "error": null,
+        "note": null
+      },
+      "memory_bus_utilization_percent": {
+        "value": 1,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetUtilizationRates",
+        "unit": "percent",
+        "error": null,
+        "note": null
+      },
+      "memory_total_bytes": {
+        "value": 12884901888,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+        "unit": "bytes",
+        "error": null,
+        "note": null
+      },
+      "memory_used_bytes": {
+        "value": 2147483648,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+        "unit": "bytes",
+        "error": null,
+        "note": null
+      },
+      "memory_free_bytes": {
+        "value": 10737418240,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+        "unit": "bytes",
+        "error": null,
+        "note": null
+      },
+      "memory_reserved_bytes": {
+        "value": 536870912,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+        "unit": "bytes",
+        "error": null,
+        "note": null
+      },
+      "temperature_gpu_celsius": {
+        "value": 45,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetTemperatureV",
+        "unit": "celsius",
+        "error": null,
+        "note": null
+      },
+      "temperature_slowdown_threshold_celsius": {
+        "value": 90,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetTemperatureThreshold",
+        "unit": "celsius",
+        "error": null,
+        "note": null
+      },
+      "power_draw_watts": {
+        "value": 31.5,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetPowerUsage",
+        "unit": "watts",
+        "error": null,
+        "note": null
+      },
+      "power_limit_watts": {
+        "value": 450.0,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetEnforcedPowerLimit",
+        "unit": "watts",
+        "error": null,
+        "note": null
+      },
+      "processes": {
+        "value": [
+          {
+            "pid": 4242,
+            "kind": "COMPUTE",
+            "used_memory_bytes": {
+              "value": 2147483648,
+              "status": "COLLECTED",
+              "source": "NVML",
+              "method": "fixture:nvmlDeviceGetComputeRunningProcesses_v3",
+              "unit": "bytes",
+              "error": null,
+              "note": null
+            },
+            "name": {
+              "value": "python",
+              "status": "COLLECTED",
+              "source": "OS",
+              "method": "fixture:nvmlSystemGetProcessName",
+              "unit": null,
+              "error": null,
+              "note": null
+            }
+          }
+        ],
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetComputeRunningProcesses_v3",
+        "unit": null,
+        "error": null,
+        "note": null
+      }
+    },
+    {
+      "device_ref": "nvml:1",
+      "sampled_at": "2026-01-01T00:00:00Z",
+      "gpu_utilization_percent": {
+        "value": 3,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetUtilizationRates",
+        "unit": "percent",
+        "error": null,
+        "note": null
+      },
+      "memory_bus_utilization_percent": {
+        "value": 1,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetUtilizationRates",
+        "unit": "percent",
+        "error": null,
+        "note": null
+      },
+      "memory_total_bytes": {
+        "value": 25769803776,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+        "unit": "bytes",
+        "error": null,
+        "note": null
+      },
+      "memory_used_bytes": {
+        "value": 4294967296,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+        "unit": "bytes",
+        "error": null,
+        "note": null
+      },
+      "memory_free_bytes": {
+        "value": 21474836480,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+        "unit": "bytes",
+        "error": null,
+        "note": null
+      },
+      "memory_reserved_bytes": {
+        "value": 536870912,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+        "unit": "bytes",
+        "error": null,
+        "note": null
+      },
+      "temperature_gpu_celsius": {
+        "value": 45,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetTemperatureV",
+        "unit": "celsius",
+        "error": null,
+        "note": null
+      },
+      "temperature_slowdown_threshold_celsius": {
+        "value": 90,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetTemperatureThreshold",
+        "unit": "celsius",
+        "error": null,
+        "note": null
+      },
+      "power_draw_watts": {
+        "value": 31.5,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetPowerUsage",
+        "unit": "watts",
+        "error": null,
+        "note": null
+      },
+      "power_limit_watts": {
+        "value": 450.0,
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetEnforcedPowerLimit",
+        "unit": "watts",
+        "error": null,
+        "note": null
+      },
+      "processes": {
+        "value": [
+          {
+            "pid": 4242,
+            "kind": "COMPUTE",
+            "used_memory_bytes": {
+              "value": 2147483648,
+              "status": "COLLECTED",
+              "source": "NVML",
+              "method": "fixture:nvmlDeviceGetComputeRunningProcesses_v3",
+              "unit": "bytes",
+              "error": null,
+              "note": null
+            },
+            "name": {
+              "value": "python",
+              "status": "COLLECTED",
+              "source": "OS",
+              "method": "fixture:nvmlSystemGetProcessName",
+              "unit": null,
+              "error": null,
+              "note": null
+            }
+          }
+        ],
+        "status": "COLLECTED",
+        "source": "NVML",
+        "method": "fixture:nvmlDeviceGetComputeRunningProcesses_v3",
+        "unit": null,
+        "error": null,
+        "note": null
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "check_id": "D01",
+      "device_ref": null,
+      "status": "PASS",
+      "severity": "NONE",
+      "title": "PyTorch can't use CUDA",
+      "explanation": "PyTorch reports that CUDA is available.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "torch.cuda.is_available() is True",
+          "source": "PYTORCH",
+          "report_path": "/frameworks/pytorch/cuda_available",
+          "value": true
+        }
+      ],
+      "detection_sources": [
+        "PYTORCH"
+      ],
+      "recommendations": [],
+      "confidence": "HIGH",
+      "limitations": [
+        "Causes are inferred from the collected snapshot; other causes (for example corrupted installations or unusual library paths) are possible."
+      ]
+    },
+    {
+      "check_id": "D02",
+      "device_ref": null,
+      "status": "PASS",
+      "severity": "NONE",
+      "title": "Free GPU memory vs requirement",
+      "explanation": "At least one device had at least 16 GiB free when sampled.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "Readiness READY (AT_LEAST_ONE_DEVICE_READY) for a requirement of 16 GiB (17179869184 bytes)",
+          "source": null,
+          "report_path": "/readiness/overall_status",
+          "value": null
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "nvml:0: free 10.0 GiB, total 12.0 GiB, required 16.0 GiB, margin -6442450944 bytes — NOT_READY (INSUFFICIENT_TOTAL_MEMORY)",
+          "source": "NVML",
+          "report_path": "/readiness/devices/0",
+          "value": null
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "nvml:1: free 20.0 GiB, total 24.0 GiB, required 16.0 GiB, margin 4294967296 bytes — READY (SUFFICIENT_FREE_MEMORY)",
+          "source": "NVML",
+          "report_path": "/readiness/devices/1",
+          "value": null
+        }
+      ],
+      "detection_sources": [
+        "NVML"
+      ],
+      "recommendations": [],
+      "confidence": "HIGH",
+      "limitations": [
+        "Free memory at least equal to the requested amount was observed at the time of inspection. This does not guarantee that a model will fit or run: actual usage depends on weights, activations, KV cache, framework/allocator overhead, CUDA context size, fragmentation and other processes that may allocate memory after this snapshot.",
+        "Single snapshot at 2026-01-01T00:00:00+00:00."
+      ]
+    },
+    {
+      "check_id": "D03",
+      "device_ref": null,
+      "status": "INFO",
+      "severity": "NONE",
+      "title": "CUDA version landscape",
+      "explanation": "Driver supports CUDA up to 12.4 — the newest CUDA version the installed driver supports, not the installed toolkit. CUDA Toolkit 12.4.131 (nvcc) — a local development toolkit, needed to compile CUDA code, not to run PyTorch binary packages. PyTorch built with CUDA 12.4 — the CUDA version PyTorch was built with.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "Driver-supported CUDA version is '12.4'",
+          "source": "NVML",
+          "report_path": "/driver/driver_supported_cuda_version",
+          "value": "12.4"
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "Active nvcc version is '12.4.131'",
+          "source": "CUDA_TOOLKIT",
+          "report_path": "/cuda_environment/active_nvcc_version",
+          "value": "12.4.131"
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "PyTorch build CUDA version is '12.4'",
+          "source": "PYTORCH",
+          "report_path": "/frameworks/pytorch/build_cuda_version",
+          "value": "12.4"
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "Toolkit /usr/local/cuda-12.4 version is '12.4.131'",
+          "source": "CUDA_TOOLKIT",
+          "report_path": "/cuda_environment/toolkits/value/0/version",
+          "value": "12.4.131"
+        }
+      ],
+      "detection_sources": [
+        "CUDA_TOOLKIT",
+        "NVML",
+        "PYTORCH"
+      ],
+      "recommendations": [],
+      "confidence": "HIGH",
+      "limitations": [
+        "Only major-version comparisons are used (CUDA minor version compatibility).",
+        "Forward-compatibility (cuda-compat) installations aren't detected.",
+        "Toolkit detection relies on version.json and nvcc --version."
+      ]
+    },
+    {
+      "check_id": "D04",
+      "device_ref": null,
+      "status": "PASS",
+      "severity": "NONE",
+      "title": "NVIDIA GPU availability",
+      "explanation": "NVML reports 2 device(s).",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "NVML is '12.550.54.15'",
+          "source": "NVML",
+          "report_path": "/driver/nvml_version",
+          "value": "12.550.54.15"
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "GPU device count is 2",
+          "source": "NVML",
+          "report_path": "/gpu/device_count",
+          "value": 2
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "nvidia-smi is '/usr/bin/nvidia-smi'",
+          "source": "NVIDIA_SMI",
+          "report_path": "/driver/nvidia_smi_path",
+          "value": "/usr/bin/nvidia-smi"
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "PCI scan is COLLECTED (2 NVIDIA device(s))",
+          "source": "OS",
+          "report_path": "/gpu/pci_observations",
+          "value": null
+        }
+      ],
+      "detection_sources": [
+        "NVIDIA_SMI",
+        "NVML",
+        "OS"
+      ],
+      "recommendations": [],
+      "confidence": "HIGH",
+      "limitations": []
+    },
+    {
+      "check_id": "D05",
+      "device_ref": null,
+      "status": "PASS",
+      "severity": "NONE",
+      "title": "Dependency availability",
+      "explanation": "All dependencies the inspector uses are present.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "nvidia-ml-py (pynvml) is '13.615.71'",
+          "source": "PLATFORM",
+          "report_path": "/driver/nvml_binding",
+          "value": "13.615.71"
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "PyTorch section is COLLECTED (2.4.1+cu124)",
+          "source": "PYTORCH",
+          "report_path": "/frameworks/pytorch/status",
+          "value": "2.4.1+cu124"
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "nvidia-smi is '/usr/bin/nvidia-smi'",
+          "source": "NVIDIA_SMI",
+          "report_path": "/driver/nvidia_smi_path",
+          "value": "/usr/bin/nvidia-smi"
+        }
+      ],
+      "detection_sources": [
+        "NVIDIA_SMI",
+        "PLATFORM",
+        "PYTORCH"
+      ],
+      "recommendations": [],
+      "confidence": "HIGH",
+      "limitations": []
+    },
+    {
+      "check_id": "D06",
+      "device_ref": "nvml:0",
+      "status": "PASS",
+      "severity": "NONE",
+      "title": "Runtime metrics availability",
+      "explanation": "All runtime metrics were collected.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "All 13 runtime fields were collected",
+          "source": null,
+          "report_path": "/runtime/0",
+          "value": null
+        }
+      ],
+      "detection_sources": [
+        "INSPECTOR"
+      ],
+      "recommendations": [],
+      "confidence": "HIGH",
+      "limitations": []
+    },
+    {
+      "check_id": "D06",
+      "device_ref": "nvml:1",
+      "status": "PASS",
+      "severity": "NONE",
+      "title": "Runtime metrics availability",
+      "explanation": "All runtime metrics were collected.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "All 13 runtime fields were collected",
+          "source": null,
+          "report_path": "/runtime/1",
+          "value": null
+        }
+      ],
+      "detection_sources": [
+        "INSPECTOR"
+      ],
+      "recommendations": [],
+      "confidence": "HIGH",
+      "limitations": []
+    },
+    {
+      "check_id": "D07",
+      "device_ref": "nvml:0",
+      "status": "INFO",
+      "severity": "NONE",
+      "title": "Temperature observation",
+      "explanation": "Measured 45 °C at 2026-01-01T00:00:00+00:00; device-reported slowdown threshold 90 °C.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "GPU temperature (°C) is 45",
+          "source": "NVML",
+          "report_path": "/runtime/0/temperature_gpu_celsius",
+          "value": 45
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "Slowdown threshold (°C) is 90",
+          "source": "NVML",
+          "report_path": "/runtime/0/temperature_slowdown_threshold_celsius",
+          "value": 90
+        }
+      ],
+      "detection_sources": [
+        "NVML"
+      ],
+      "recommendations": [],
+      "confidence": "HIGH",
+      "limitations": [
+        "A single temperature sample cannot establish whether the GPU is thermally throttling or how temperature changes under load (C15). For sustained observation use nvidia-smi monitoring or DCGM."
+      ]
+    },
+    {
+      "check_id": "D07",
+      "device_ref": "nvml:1",
+      "status": "INFO",
+      "severity": "NONE",
+      "title": "Temperature observation",
+      "explanation": "Measured 45 °C at 2026-01-01T00:00:00+00:00; device-reported slowdown threshold 90 °C.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "GPU temperature (°C) is 45",
+          "source": "NVML",
+          "report_path": "/runtime/1/temperature_gpu_celsius",
+          "value": 45
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "Slowdown threshold (°C) is 90",
+          "source": "NVML",
+          "report_path": "/runtime/1/temperature_slowdown_threshold_celsius",
+          "value": 90
+        }
+      ],
+      "detection_sources": [
+        "NVML"
+      ],
+      "recommendations": [],
+      "confidence": "HIGH",
+      "limitations": [
+        "A single temperature sample cannot establish whether the GPU is thermally throttling or how temperature changes under load (C15). For sustained observation use nvidia-smi monitoring or DCGM."
+      ]
+    },
+    {
+      "check_id": "D08",
+      "device_ref": null,
+      "status": "INFO",
+      "severity": "LOW",
+      "title": "CUDA device visibility and ordering",
+      "explanation": "PyTorch cuda:0 is NVML device 1; PyTorch cuda:1 is NVML device 0.",
+      "evidence": [
+        {
+          "kind": "OBSERVATION",
+          "statement": "CUDA_VISIBLE_DEVICES is NOT_DETECTED (NOT_SET: CUDA_VISIBLE_DEVICES is not set)",
+          "source": "ENVIRONMENT",
+          "report_path": "/cuda_environment/environment/CUDA_VISIBLE_DEVICES",
+          "value": null
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "PyTorch cuda:0 correlation is 'nvml:1'",
+          "source": "INSPECTOR",
+          "report_path": "/frameworks/pytorch/devices/0/correlated_device_ref",
+          "value": "nvml:1"
+        },
+        {
+          "kind": "OBSERVATION",
+          "statement": "PyTorch cuda:1 correlation is 'nvml:0'",
+          "source": "INSPECTOR",
+          "report_path": "/frameworks/pytorch/devices/1/correlated_device_ref",
+          "value": "nvml:0"
+        }
+      ],
+      "detection_sources": [
+        "ENVIRONMENT",
+        "INSPECTOR"
+      ],
+      "recommendations": [],
+      "confidence": "HIGH",
+      "limitations": []
+    }
+  ],
+  "readiness": {
+    "required_vram_gib": 16.0,
+    "required_bytes": 17179869184,
+    "criterion": "DEVICE_FREE_MEMORY_GTE_REQUIRED",
+    "overall_status": "READY",
+    "overall_reason": "AT_LEAST_ONE_DEVICE_READY",
+    "devices": [
+      {
+        "device_ref": "nvml:0",
+        "status": "NOT_READY",
+        "reason": "INSUFFICIENT_TOTAL_MEMORY",
+        "free_bytes": {
+          "value": 10737418240,
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+          "unit": "bytes",
+          "error": null,
+          "note": null
+        },
+        "total_bytes": {
+          "value": 12884901888,
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+          "unit": "bytes",
+          "error": null,
+          "note": null
+        },
+        "margin_bytes": -6442450944,
+        "explanation": "Total memory 12.0 GiB is below the required 16.0 GiB."
+      },
+      {
+        "device_ref": "nvml:1",
+        "status": "READY",
+        "reason": "SUFFICIENT_FREE_MEMORY",
+        "free_bytes": {
+          "value": 21474836480,
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+          "unit": "bytes",
+          "error": null,
+          "note": null
+        },
+        "total_bytes": {
+          "value": 25769803776,
+          "status": "COLLECTED",
+          "source": "NVML",
+          "method": "fixture:nvmlDeviceGetMemoryInfo_v2",
+          "unit": "bytes",
+          "error": null,
+          "note": null
+        },
+        "margin_bytes": 4294967296,
+        "explanation": "Observed 20.0 GiB free (NVML), at least the required 16.0 GiB."
+      }
+    ],
+    "disclaimer": "Free memory at least equal to the requested amount was observed at the time of inspection. This does not guarantee that a model will fit or run: actual usage depends on weights, activations, KV cache, framework/allocator overhead, CUDA context size, fragmentation and other processes that may allocate memory after this snapshot.",
+    "limitations": [
+      "Single snapshot at 2026-01-01T00:00:00+00:00."
+    ]
+  },
+  "collection_errors": [],
+  "unsupported_capabilities": [],
+  "limitations": [
+    "This report is a point-in-time snapshot.",
+    "Findings and readiness are derived from this single snapshot only. CUDA execution isn't checked: frameworks.pytorch.cuda_available is PyTorch's own answer, the probe runs no CUDA code, a CUDA Toolkit or nvcc in cuda_environment is an installation fact, and driver.cuda_driver_library is the libcuda version NVML reports; none of them shows that code runs on a GPU."
+  ],
+  "collector_runs": [
+    {
+      "collector": "system",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    },
+    {
+      "collector": "pci",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    },
+    {
+      "collector": "nvml",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    },
+    {
+      "collector": "driver",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    },
+    {
+      "collector": "gpu_hardware",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    },
+    {
+      "collector": "runtime",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    },
+    {
+      "collector": "nvidia_smi",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    },
+    {
+      "collector": "cuda_environment",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    },
+    {
+      "collector": "pytorch",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    },
+    {
+      "collector": "correlation",
+      "status": "COMPLETED",
+      "duration_ms": 5
+    }
+  ],
+  "redaction": {
+    "applied": false,
+    "categories": []
+  }
+}
