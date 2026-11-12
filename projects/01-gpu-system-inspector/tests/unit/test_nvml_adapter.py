@@ -21,7 +21,7 @@ from gpu_system_inspector.adapters import (
     PynvmlAdapter,
 )
 from gpu_system_inspector.adapters.nvml import import_pynvml
-from gpu_system_inspector.collectors import GpuHardwareCollector
+from gpu_system_inspector.collectors import DriverCollector, GpuHardwareCollector
 from gpu_system_inspector.models import (
     DRIVER_SUPPORTED_CUDA_NOTE,
     CollectionStatus,
@@ -148,6 +148,123 @@ def test_a_vanished_distribution_version_is_not_installed():
         StubPynvml(), packages_distributions=lambda: {"pynvml": ["nvidia-ml-py"]}, version=version
     )
     assert adapter.binding_version().status is S.NOT_INSTALLED
+
+
+def _counting_lookup(mapping):
+    calls: list[str] = []
+
+    def lookup():
+        calls.append("packages_distributions")
+        return mapping
+
+    return calls, lookup
+
+
+def test_binding_version_and_distribution_share_one_metadata_lookup():
+    calls, lookup = _counting_lookup({"pynvml": ["nvidia-ml-py"]})
+    asked: list[str] = []
+
+    def version(name):
+        asked.append(name)
+        return "13.615.71"
+
+    adapter = _adapter(StubPynvml(), packages_distributions=lookup, version=version)
+    binding = adapter.binding_version()
+    distribution = adapter.binding_distribution()
+    again = adapter.binding_distribution()
+    assert calls == ["packages_distributions"]
+    assert asked == ["nvidia-ml-py"]
+    assert binding.value == "13.615.71" and binding.method == "importlib.metadata.version"
+    assert distribution.value == "nvidia-ml-py"
+    assert distribution.method == "importlib.metadata.packages_distributions"
+    assert again is distribution
+
+
+def test_an_empty_metadata_map_fails_both_fields_after_one_lookup():
+    calls, lookup = _counting_lookup({})
+    adapter = _adapter(StubPynvml(), packages_distributions=lookup)
+    version = adapter.binding_version()
+    distribution = adapter.binding_distribution()
+    assert calls == ["packages_distributions"]
+    assert version.status is S.NOT_INSTALLED and version.error.code == "ImportError"
+    assert version.method == "importlib.metadata.version"
+    assert version.error.message == "No module named 'pynvml'"
+    assert distribution.status is S.NOT_INSTALLED and distribution.error.code == "ImportError"
+    assert distribution.method == "importlib.metadata.packages_distributions"
+    assert distribution.error.message == version.error.message
+
+
+def test_an_alternative_distribution_is_selected_once_and_versioned():
+    calls, lookup = _counting_lookup({"pynvml": ["pynvml"]})
+    asked: list[str] = []
+
+    def version(name):
+        asked.append(name)
+        return "11.5.0"
+
+    adapter = _adapter(StubPynvml(), packages_distributions=lookup, version=version)
+    binding = adapter.binding_version()
+    distribution = adapter.binding_distribution()
+    assert calls == ["packages_distributions"]
+    assert asked == ["pynvml"]
+    assert distribution.value == "pynvml"
+    assert distribution.method == "importlib.metadata.packages_distributions"
+    assert binding.value == "11.5.0" and binding.method == "importlib.metadata.version"
+    assert binding.source is Source.PLATFORM and distribution.source is Source.PLATFORM
+
+
+def test_a_missing_distribution_version_is_not_cached_and_the_name_is():
+    calls, lookup = _counting_lookup({"pynvml": ["nvidia-ml-py"]})
+    asked: list[str] = []
+
+    def version(name):
+        asked.append(name)
+        raise PackageNotFoundError(name)
+
+    adapter = _adapter(StubPynvml(), packages_distributions=lookup, version=version)
+    first = adapter.binding_version()
+    second = adapter.binding_version()
+    distribution = adapter.binding_distribution()
+    assert calls == ["packages_distributions"]
+    assert asked == ["nvidia-ml-py", "nvidia-ml-py"]
+    for outcome in (first, second):
+        assert outcome.status is S.NOT_INSTALLED
+        assert outcome.error.code == "PackageNotFoundError"
+        assert outcome.method == "importlib.metadata.version"
+        assert outcome.value is None
+    assert distribution.is_collected and distribution.value == "nvidia-ml-py"
+    assert distribution.method == "importlib.metadata.packages_distributions"
+
+
+def test_a_metadata_lookup_exception_is_not_cached():
+    calls: list[str] = []
+
+    def lookup():
+        calls.append("packages_distributions")
+        raise RuntimeError("metadata unreadable")
+
+    adapter = _adapter(StubPynvml(), packages_distributions=lookup)
+    with pytest.raises(RuntimeError, match="metadata unreadable"):
+        adapter.binding_distribution()
+    with pytest.raises(RuntimeError, match="metadata unreadable"):
+        adapter.binding_version()
+    assert calls == ["packages_distributions", "packages_distributions"]
+
+
+def test_the_driver_collector_scans_binding_metadata_once():
+    calls, lookup = _counting_lookup({"pynvml": ["nvidia-ml-py", "pynvml"]})
+    adapter = _adapter(
+        StubPynvml(), packages_distributions=lookup, version=lambda name: "13.615.71"
+    )
+    session = adapter.open()
+    section = DriverCollector(adapter, session, FixedClock()).collect().section
+    session.close()
+    assert calls == ["packages_distributions"]
+    binding, distribution = section.nvml_binding, section.nvml_binding_distribution
+    assert binding.is_collected and binding.value == "13.615.71"
+    assert binding.method == "importlib.metadata.version"
+    assert distribution.is_collected and distribution.value == "nvidia-ml-py"
+    assert distribution.method == "importlib.metadata.packages_distributions"
 
 
 # --- initialisation outcomes --------------------------------------------------------------

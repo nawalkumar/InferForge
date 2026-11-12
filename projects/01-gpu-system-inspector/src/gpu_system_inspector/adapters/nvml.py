@@ -94,10 +94,20 @@ class PynvmlAdapter:
         self._packages_distributions = packages_distributions
         self._version = version
         self._session: PynvmlSession | None = None
+        # One distribution lookup per adapter. A returned outcome, including a failure,
+        # is reused. An exception from the lookup is not stored.
+        self._binding_distribution: Observed[str] | None = None
 
     # --- binding facts, without importing pynvml ------------------------------------------
 
     def binding_distribution(self) -> Observed[str]:
+        cached = self._binding_distribution
+        if cached is None:
+            cached = self._read_binding_distribution()
+            self._binding_distribution = cached
+        return cached
+
+    def _read_binding_distribution(self) -> Observed[str]:
         method = self._prefix + "importlib.metadata.packages_distributions"
         lookup = self._packages_distributions
         if lookup is None:
